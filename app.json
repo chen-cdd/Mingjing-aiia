@@ -1,19 +1,47 @@
 {
-    "pages": [
-      "pages/mirror/index",
-      "pages/onboarding/index",
-      "pages/voice/index",
-      "pages/text/index",
-      "pages/analysis/index",
-      "pages/chat/index",
-      "pages/rescue/index",
-      "pages/inner/index"
-    ],
-    "window": {
-      "navigationBarTitleText": "明镜",
-      "navigationBarBackgroundColor": "#f6f8fb",
-      "backgroundColor": "#f6f8fb",
-      "navigationBarTextStyle": "black"
-    }
+  "pages": [
+    "pages/mirror/index",
+    "pages/past/index",
+    "pages/today/index",
+    "pages/future/index",
+    "pages/onboarding/index",
+    "pages/voice/index",
+    "pages/text/index",
+    "pages/analysis/index",
+    "pages/chat/index",
+    "pages/rescue/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "明镜",
+    "navigationBarBackgroundColor": "#f6f8fb",
+    "backgroundColor": "#f6f8fb",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4f46e5",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/past/index",
+        "text": "过去",
+        "iconPath": "assets/icons/past.png",
+        "selectedIconPath": "assets/icons/past.png"
+      },
+      {
+        "pagePath": "pages/today/index",
+        "text": "今日",
+        "iconPath": "assets/icons/today.png",
+        "selectedIconPath": "assets/icons/today.png"
+      },
+      {
+        "pagePath": "pages/future/index",
+        "text": "未来",
+        "iconPath": "assets/icons/future.png",
+        "selectedIconPath": "assets/icons/future.png"
+      }
+    ]
   }
   
+}

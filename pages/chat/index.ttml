@@ -52,12 +52,6 @@
     <view class="btn-primary {{sending?'disabled':''}}" bindtap="send">{{sending?'生成中…':'发送'}}</view>
   </view>
 
-  <!-- ✅ 底部固定：进入里世界（根据是否显示输入条，自动上移避免遮挡） -->
-  <view class="enter-inner-fixed"
-        style="bottom: {{tab==='chat' ? '120rpx' : '32rpx'}};"
-        bindtap="goInner">
-    进入里世界
-  </view>
 
   <!-- 功能卡弹层 -->
   <view class="sheet {{showSkill?'show':''}}">

@@ -76,7 +76,51 @@ Page({
 
   // 交互
   back(){ tt.navigateBack({ delta: 1 }); },
-  continue(){ this.setData({ showArchive: true }); },
+// 在 continue 方法中添加保存到缓存的逻辑
+  continue() { 
+    // 保存分析结果到缓存
+    const stored = tt.getStorageSync('inner_events_v1') || {};
+    const timeline = stored.timeline || [];
+    
+    // 创建新记录
+    const newRecord = {
+      id: Date.now().toString(),
+      time: new Date().toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+      text: app.globalData.draft.text,
+      summary: this.data.summary,
+      topics: this.data.topicChips,
+      emotions: this.data.emotions,
+      createTime: new Date().toISOString(),
+      updateTime: new Date().toISOString()
+    };
+    
+    // 添加到时间线
+    timeline.unshift(newRecord);
+    stored.timeline = timeline;
+    
+    // 更新情绪云图数据
+    const cloud = stored.cloud || [];
+    this.data.emotions.forEach(emotion => {
+      const existing = cloud.find(item => item.name === emotion.name);
+      if (existing) {
+        existing.count += 1;
+        existing.value += emotion.pct / 100;
+      } else {
+        cloud.push({
+          name: emotion.name,
+          count: 1,
+          value: emotion.pct / 100
+        });
+      }
+    });
+    stored.cloud = cloud;
+    
+    // 保存到缓存
+    tt.setStorageSync('inner_events_v1', stored);
+    
+    // 显示归档弹层
+    this.setData({ showArchive: true });
+  },
 
   addTopic(e){
     const v = (e.detail && e.detail.value || '').trim().replace(/^#/, '');

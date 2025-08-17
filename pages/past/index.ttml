@@ -1,0 +1,35 @@
+<view class="page">
+  <view class="card">
+    <view class="card-title">情绪云图</view>
+    <canvas class="cloud" canvas-id="cloud" id="cloud"></canvas>
+  </view>
+
+  <view class="card">
+    <view class="card-title">时间线</view>
+    <view class="timeline">
+      <view class="timeline-item" wx:for="{{timeline}}" wx:key="id" bindtap="onTimelineItemTap" data-id="{{item.id}}">
+        <view class="time">{{item.time}}</view>
+        <view class="summary">{{item.summary}}</view>
+        <view class="topics">
+          <text class="topic" wx:for="{{item.topics}}" wx:key="index">#{{item}}</text>
+        </view>
+        <view class="emotions">
+          <text class="emotion" wx:for="{{item.emotions}}" wx:key="name">{{item.name}}: {{item.pct}}%</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">行为模式</view>
+    <view class="behavior-pattern">
+      <view class="pattern-content" wx:if="{{behaviorPattern}}">
+        <view class="pattern-text">{{behaviorPattern}}</view>
+      </view>
+      <view class="pattern-empty" wx:else>
+        <text>查看所有时间线内容后，点击下方按钮分析您的行为模式</text>
+      </view>
+      <button class="pattern-btn" bindtap="analyzeBehaviorPattern" loading="{{analyzing}}">分析最近的行为模式</button>
+    </view>
+  </view>
+</view>

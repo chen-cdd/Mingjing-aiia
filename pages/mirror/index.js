@@ -45,7 +45,7 @@ Page({
     goVoice(){ tt.navigateTo({ url: '/pages/voice/index' }); },
     goText(){ tt.navigateTo({ url: '/pages/text/index' }); },
     goInnerWorld(){
-      tt.navigateTo({ url: '/pages/inner/index' }); // ← 如果路径不同，请改成你的实际路径
+      tt.switchTab({ url: '/pages/today/index' }); // ✅ 使用 switchTab 代替 navigateTo
     }
   });
   

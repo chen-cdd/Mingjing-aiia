@@ -1,0 +1,31 @@
+<view class="page">
+    <view class="card">
+      <view class="card-title-row">
+        <view class="card-title">我的习惯</view>
+        <button size="mini" class="primary" bindtap="openAddAction">新增习惯</button>
+      </view>
+      <view class="action-list">
+        <view class="action-item" wx:for="{{actions}}" wx:key="at">
+          <view class="action-main">
+            <view class="action-text">{{item.text}}</view>
+            <view class="action-time">{{item.time}}</view>
+          </view>
+          <view class="action-ops">
+            <button size="mini" bindtap="openEditAction" data-id="{{item.at}}">编辑</button>
+            <button size="mini" class="danger" bindtap="deleteAction" data-id="{{item.at}}">删除</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  
+        <view class="card">
+      <view class="card-title">快速练习</view>
+      <view class="grid">
+        <view class="skill" tt:for="{{skills}}" tt:key="id" data-id="{{item.id}}" bindtap="practice">
+          <view class="skill-title">{{item.title}}</view>
+          <view class="skill-meta">{{item.meta}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  

@@ -1,0 +1,37 @@
+<view class="page">
+    <view class="card">
+      <view class="card-title">关系图</view>
+      <canvas class="graph" canvas-id="graph" id="graph" bindtap="tapGraph"></canvas>
+      <view class="hint">点击上方节点以查看人物详情与事件</view>
+    </view>
+  
+    <view class="card">
+      <view class="card-title-row">
+        <view class="card-title">{{personTitle}}</view>
+        <button tt:if="{{selectedPersonId && selectedPersonId!=='me'}}" class="primary" size="mini" bindtap="chatWithPerson">与该人物分身对话</button>
+      </view>
+      <view class="person-info">{{personInfo}}</view>
+    </view>
+  
+    <view class="card">
+      <view class="card-title-row">
+        <view class="card-title">相关事件（{{selectedEvents.length}}）</view>
+        <button size="mini" class="primary" bindtap="addEvent" tt:if="{{selectedPersonId}}">新增事件</button>
+      </view>
+  
+      <view class="event-list" tt:if="{{selectedPersonId}}">
+        <view class="event-item" tt:for="{{selectedEvents}}" tt:key="id">
+          <view class="event-main">
+            <view class="event-time">{{item.time}}</view>
+            <view class="event-summary">{{item.summary}}</view>
+            <view class="event-topics">
+              <text class="topic" tt:for="{{item.topics}}" tt:key="index">#{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+  
+      <view class="empty" tt:if="{{!selectedPersonId}}">请先点击关系图选择人物</view>
+      <view class="empty" tt:if="{{selectedPersonId && selectedEvents.length===0}}">暂无事件，点击右上角"新增事件"</view>
+    </view>
+  </view>

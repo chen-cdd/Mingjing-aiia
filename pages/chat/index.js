@@ -139,21 +139,32 @@ Page({
       countdownText: this._fmt(dur)
     });
 
-    timer = setInterval(()=>{
-      let left = this.data.secondsLeft - 1;
-      if (left <= 0) {
-        this._stopTimer();
-        this.setData({ secondsLeft: 0, countdownText: '完成 ✅' });
+      timer = setInterval(() => {
+    let left = this.data.secondsLeft - 1;
+    if (left <= 0) {
+      this._stopTimer();
+      this.setData({ secondsLeft: 0, countdownText: '完成 ✅' });
 
-        // 结束反馈 + 返回镜子
-        const fb = this._buildFinishFeedback();
-        this._appendFeedback(fb);
-        if (this._timerFrom === 'skill') this.setData({ showSkill:false });
-        setTimeout(()=> this._goMirror(), 900);
-      } else {
-        this.setData({ secondsLeft: left, countdownText: this._fmt(left) });
+      // 结束反馈 + 返回镜子
+      const fb = this._buildFinishFeedback();
+      this._appendFeedback(fb);
+      
+      // 保存行为卡
+      if (this._timerFrom === 'skill') {
+        this._saveSkillToActions(this.data.skill);
+        this.setData({ showSkill: false });
+      } else if (this._timerFrom === 'sos') {
+        this._saveSkillToActions({
+          title: '2 分钟呼吸练习',
+          steps: ['吸气 4 拍', '停留 4 拍', '呼气 4 拍', '停留 4 拍，循环 8 次']
+        });
       }
-    }, 1000);
+      
+      setTimeout(() => this._goMirror(), 900);
+    } else {
+      this.setData({ secondsLeft: left, countdownText: this._fmt(left) });
+    }
+  }, 1000);
   },
 
   /* ===================== 辅助 & 导航 ===================== */
@@ -183,6 +194,49 @@ Page({
     this.setData({ msgs });
     tt.showToast({ title:'已完成', icon:'success' });
   },
+  _saveSkillToActions(skill) {
+  if (!skill || !skill.title) return;
+  
+  // 获取当前行为卡信息
+  const act = app.globalData.actions;
+  act.unshift({ 
+    text: `完成：${skill.title}`, 
+    at: new Date().toISOString(),
+    skill: skill
+  });
+  
+  // 保存到全局数据和缓存
+  app.globalData.actions = act; 
+  app.persist();
+  
+  // 同时保存到 inner_events_v1 中
+  const stored = tt.getStorageSync('inner_events_v1') || {};
+  const actions = stored.actions || [];
+  actions.unshift({
+    text: `完成：${skill.title}`,
+    time: new Date().toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+    at: new Date().toISOString(),
+    skill: skill
+  });
+  stored.actions = actions;
+  
+  // 保存技能卡到 skills 数组
+  const skills = stored.skills || [];
+  const skillId = skill.id || skill.title.toLowerCase().replace(/\s+/g, '_');
+  
+  // 检查是否已存在相同 ID 的技能卡
+  if (!skills.find(s => s.id === skillId)) {
+    skills.push({
+      id: skillId,
+      title: skill.title,
+      meta: skill.meta || '练习技能',
+      steps: skill.steps || []
+    });
+    stored.skills = skills;
+  }
+  
+  tt.setStorageSync('inner_events_v1', stored);
+},
 
   _goMirror(){
     try {

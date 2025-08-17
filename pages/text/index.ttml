@@ -1,6 +1,48 @@
 <view class="page">
+  <!-- 查看模式 -->
+  <block tt:if="{{mode === 'view' && !isEditing}}">
+    <view class="section-title">记录详情</view>
+    <view class="record-meta">
+      <text class="record-time">{{item.time}}</text>
+      <view class="record-topics">
+        <text class="topic" tt:for="{{item.topics}}" tt:key="index">#{{item}}</text>
+      </view>
+    </view>
+    <view class="record-content">{{text}}</view>
+    <view class="emotions-container">
+      <text class="emotions-title">情绪分析</text>
+      <view class="emotions-list">
+        <view class="emotion-item" tt:for="{{item.emotions}}" tt:key="name">
+          <text class="emotion-name">{{item.name}}</text>
+          <view class="emotion-bar">
+            <view class="emotion-fill" style="width: {{item.pct}}%;"></view>
+          </view>
+          <text class="emotion-score">{{item.pct}}%</text>
+        </view>
+      </view>
+    </view>
+    <view class="btn-row">
+      <view class="btn-ghost" bindtap="back">返回</view>
+      <view class="btn-primary" bindtap="toggleEdit">编辑记录</view>
+    </view>
+  </block>
+  
+  <!-- 编辑模式 -->
+  <block tt:if="{{mode === 'view' && isEditing}}">
+    <view class="section-title">编辑记录</view>
+    <textarea class="textarea" bindinput="onInput" value="{{text}}" auto-height="true"/>
+    <view class="btn-row">
+      <view class="btn-ghost" bindtap="toggleEdit">取消</view>
+      <view class="btn-primary" bindtap="save">保存修改</view>
+    </view>
+  </block>
+  
+  <!-- 新建模式 -->
+  <block tt:if="{{mode === 'new'}}">
     <view class="section-title">写下来，也很好</view>
     <textarea class="textarea" placeholder="把你当下的想法写下来……" bindinput="onInput" value="{{text}}"/>
-    <view class="btn-row"><view class="btn-primary" bindtap="save">保存想法</view></view>
-  </view>
-  
+    <view class="btn-row">
+      <view class="btn-primary" bindtap="save">保存想法</view>
+    </view>
+  </block>
+</view>

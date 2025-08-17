@@ -1,0 +1,144 @@
+.page {
+  padding: 30rpx;
+  background-color: #f8f8f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.section-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-bottom: 30rpx;
+  color: #333;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 300rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+  margin-bottom: 30rpx;
+}
+
+.btn-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40rpx;
+}
+
+.btn-primary {
+  background-color: #4a90e2;
+  color: white;
+  padding: 16rpx 40rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  text-align: center;
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: #666;
+  padding: 16rpx 40rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  text-align: center;
+  border: 1rpx solid #ddd;
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.record-meta {
+  margin-bottom: 20rpx;
+}
+
+.record-time {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.record-topics {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 16rpx;
+}
+
+.topic {
+  font-size: 24rpx;
+  color: #666;
+  background-color: #f0f0f0;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  margin-right: 12rpx;
+  margin-bottom: 8rpx;
+}
+
+.record-content {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  margin-bottom: 30rpx;
+  color: #333;
+}
+
+.emotions-container {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.emotions-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+  color: #333;
+  display: block;
+}
+
+.emotions-list {
+  margin-top: 10rpx;
+}
+
+.emotion-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.emotion-name {
+  width: 80rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.emotion-bar {
+  flex: 1;
+  height: 16rpx;
+  background-color: #f0f0f0;
+  border-radius: 8rpx;
+  overflow: hidden;
+  margin: 0 16rpx;
+}
+
+.emotion-fill {
+  height: 100%;
+  background-color: #4a90e2;
+  border-radius: 8rpx;
+}
+
+.emotion-score {
+  font-size: 24rpx;
+  color: #666;
+  width: 60rpx;
+  text-align: right;
+}
