@@ -1,87 +1,6 @@
-
-
-
-          
-我需要分析项目结构和代码内容，以便生成一份全面的README.md文件。首先，我将查看项目的主要文件和目录结构，了解项目的核心功能和组织方式。
-        
-            
-toolName: view_folder
-            
-status: success
-          
-e:\明镜\langlangshan\明镜明镜
-          
-现在我需要查看项目的主要配置文件，以了解项目的基本信息和功能。首先查看app.json，这通常包含应用的基本配置信息。
-        
-            
-toolName: view_files
-            
-status: success
-          
-            
-filePath: e:\明镜\langlangshan\明镜明镜\app.json
-          
-接下来我需要查看主应用文件app.js，了解应用的初始化逻辑和主要功能。
-        
-            
-toolName: view_files
-            
-status: success
-          
-            
-filePath: e:\明镜\langlangshan\明镜明镜\app.js
-          
-我需要查看项目的主要页面文件，以了解应用的核心功能。从app.json中可以看出，mirror页面是首页，我将先查看这个页面的内容。
-        
-            
-toolName: view_files
-            
-status: success
-          
-            
-filePath: e:\明镜\langlangshan\明镜明镜\pages\mirror\index.js
-          
-我需要查看一下utils目录下的文件，了解应用的核心功能实现。特别是llm.js和analyze.js，这些可能与应用的主要功能相关。
-        
-            
-toolName: view_files
-            
-status: success
-          
-            
-filePath: e:\明镜\langlangshan\明镜明镜\utils\llm.js
-          
-我需要继续查看llm.js的剩余部分，以全面了解应用的LLM功能实现。
-        
-            
-toolName: view_files
-            
-status: success
-          
-            
-filePath: e:\明镜\langlangshan\明镜明镜\utils\llm.js
-          
-我需要查看analyze.js文件，了解应用的分析功能实现。
-        
-            
-toolName: view_files
-            
-status: success
-          
-            
-filePath: e:\明镜\langlangshan\明镜明镜\utils\analyze.js
-          
-我需要查看一下语音相关功能的实现，查看asr.js文件。
-        
-            
-toolName: view_files
-            
-status: success
-          
-            
-filePath: e:\明镜\langlangshan\明镜明镜\utils\asr.js
-          
 # 明镜 - 心理健康小程序
+
+<img src="./img/明镜.png" alt="明镜图片" width="300">
 
 明镜是一款专注于心理健康和情绪管理的抖音小程序，通过AI驱动的对话和分析功能，帮助用户表达、理解和管理自己的情绪。
 
@@ -97,6 +16,7 @@ filePath: e:\明镜\langlangshan\明镜明镜\utils\asr.js
 - **情感识别**：识别用户表达中的情绪类型和强度
 - **对话引导**：提供共情回应和客观视角，帮助用户理解自己的情绪
 - **微练习推荐**：根据用户情况推荐简短的情绪管理技巧和练习
+- **关系练习**：根据用户描述以及填表完善用户关系中人物的智能体，进行演练
 - **内心世界**：提供用户历史会话和个人成长记录
 
 ## 安装指南
