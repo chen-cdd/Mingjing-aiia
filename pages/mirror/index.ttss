@@ -1,0 +1,99 @@
+/* 页面容器（避免用 vh / CSS 变量） */
+.mirror-page{
+    height: 100%; min-height: 1200rpx;
+    display:flex; align-items:center; justify-content:center;
+    background:#f6f8fb; padding:24rpx;
+  }
+  
+  /* 镜面：放大到 640×960 */
+  .mirror-surface,
+  .presence-layer,
+  .menu-in-mirror{
+    width: 640rpx; height: 960rpx; border-radius:48rpx; position:relative; overflow:hidden;
+    border:2rpx solid #dbeafe;
+    background:radial-gradient(120% 120% at 50% 20%, #bfe3ff 0%, #e8f2ff 48%, #ffffff 100%);
+    box-shadow: inset 0 18rpx 56rpx rgba(59,130,246,.18), 0 16rpx 48rpx rgba(31,41,55,.06);
+  }
+  
+  /* 反射装饰 */
+  .mirror-reflections .reflection{position:absolute; border-radius:9999rpx; filter:blur(12rpx); opacity:.4}
+  .reflection-1{width:220rpx;height:220rpx;left:8%;top:6%; background:linear-gradient(145deg, #fff, #dbeafe);}
+  .reflection-2{width:140rpx;height:140rpx;right:10%;top:12%; background:linear-gradient(145deg, #fff, #e0f2fe);}
+  .reflection-3{width:300rpx;height:80rpx;left:20%;bottom:12%; background:linear-gradient(90deg, #fff, #e8f2ff); opacity:.25}
+  
+  /* 提示 */
+  .mirror-hint{position:absolute;left:0;right:0;bottom:40rpx;text-align:center;color:#6b7280}
+  .hint-text{font-size:26rpx}
+  .hint-arrow{font-size:30rpx;margin-top:6rpx;animation:floatY 1.6s ease-in-out infinite}
+  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(6rpx)}}
+  
+  /* 水波 */
+  .ripple-layer{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none}
+  .ripple{
+    position:absolute; transform:translate(-50%,-50%) scale(0); border-radius:9999rpx;
+    border:4rpx solid rgba(59,130,246,.45); background:radial-gradient(circle, rgba(59,130,246,.18), transparent 60%);
+    animation:ripple 900ms ease-out forwards;
+  }
+  @keyframes ripple{to{transform:translate(-50%,-50%) scale(1); opacity:0}}
+  
+  /* 我在层：背景稍微更亮 */
+  .presence-layer{
+    background:radial-gradient(120% 120% at 50% 20%, #cfe6ff 0%, #f1f7ff 55%, #ffffff 100%);
+  }
+  .presence-text{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    font-weight:800; font-size:56rpx; color:#2563eb; letter-spacing:4rpx;
+    text-shadow:0 6rpx 22rpx rgba(37,99,235,.25);
+    animation:presence 1.2s ease-in-out forwards;
+  }
+  @keyframes presence{
+    0%{opacity:0; transform:translate(-50%,-40%) scale(.96)}
+    50%{opacity:1; transform:translate(-50%,-50%) scale(1)}
+    100%{opacity:0; transform:translate(-50%,-60%) scale(.98)}
+  }
+  
+  /* 镜中弹窗 */
+  .menu-in-mirror{display:flex; align-items:center; justify-content:center;}
+  .menu-backdrop{position:absolute; inset:0; background:rgba(15,23,42,.08)}
+  .menu-content{
+    position:relative; width:86%; background:#ffffff; border:2rpx solid #e5e7eb;
+    border-radius:28rpx; padding:28rpx; box-shadow:0 18rpx 56rpx rgba(0,0,0,.12);
+    transform:scale(.96); opacity:0;
+  }
+  .modal-in{animation:modalIn .22s ease-out forwards}
+  @keyframes modalIn{to{transform:scale(1); opacity:1}}
+  
+  .menu-header{text-align:center; margin-bottom:16rpx}
+  .menu-title{font-size:34rpx; font-weight:700; color:#1f2937}
+  .menu-subtitle{font-size:24rpx; color:#6b7280}
+  
+  .menu-actions{display:flex; gap:16rpx; margin-top:8rpx; flex-wrap:wrap; justify-content:center}
+  .action-card{
+    width:300rpx; border:2rpx solid #e5e7eb; border-radius:24rpx; background:#fff;
+    padding:22rpx; box-shadow:0 10rpx 28rpx rgba(31,41,55,.06); text-align:center;
+  }
+  .action-hover{transform:scale(.98)}
+  .action-icon{font-size:44rpx; margin-bottom:8rpx}
+  .action-label{display:block; font-weight:700; margin-bottom:6rpx}
+  .action-desc{display:block; color:#6b7280; font-size:24rpx}
+  
+  .close-button{
+    position:absolute; right:18rpx; top:12rpx; width:64rpx; height:64rpx; border-radius:9999rpx;
+    display:flex; align-items:center; justify-content:center; font-size:42rpx; color:#64748b;
+    background:#ffffff; border:2rpx solid #e5e7eb;
+  }
+  /* 底部固定“进入里世界”按钮 */
+.enter-inner-fixed{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 6vh;
+  z-index: 50;
+  background: #111827;
+  color: #fff;
+  padding: 16rpx 28rpx;
+  border-radius: 9999rpx;
+  border: 2rpx solid #1f2937;
+  box-shadow: 0 10rpx 20rpx rgba(0,0,0,.08);
+  font-weight: 700;
+}

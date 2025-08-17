@@ -1,0 +1,11 @@
+<view class="page">
+    <view class="card" style="margin-top:12vh; text-align:center;">
+      <view style="font-size:36rpx;font-weight:700;margin-bottom:16rpx;">你好，我是明镜</view>
+      <view style="line-height:1.8">我将温柔接纳你的所有情绪，\n陪你照见内心的真实。\n我即是你。\n让我们一起成长，开启自我觉察之旅。</view>
+      <view class="btn-row" style="justify-content:center;margin-top:24rpx;">
+        <view class="btn-primary" bindtap="start">开启旅程</view>
+      </view>
+      <view class="subtle">首次使用请允许麦克风/本地存储（演示用途）。</view>
+    </view>
+  </view>
+  

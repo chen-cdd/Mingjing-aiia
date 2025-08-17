@@ -1,0 +1,84 @@
+<view class="page">
+  <view style="display:flex;align-items:center;justify-content:space-between">
+    <view class="chip tag">{{tag}}</view>
+    <view>
+      <text class="tab {{tab=='chat'?'active':''}}" bindtap="toChat">对话</text>
+      <text class="tab {{tab=='sos'?'active':''}}" bindtap="toSOS" style="margin-left:12rpx;">情绪救急</text>
+    </view>
+  </view>
+
+  <!-- 对话区 -->
+  <view class="chat-pane" tt:if="{{tab==='chat'}}">
+    <block tt:for="{{msgs}}" tt:key="id">
+      <view class="msg {{item.role}}">
+        <text>{{item.text}}</text>
+      </view>
+    </block>
+  </view>
+
+  <!-- SOS 区（简易引导） -->
+  <view class="sos-pane" tt:if="{{tab==='sos'}}">
+    <view class="sos-card">
+      <view class="sos-title">2 分钟呼吸练习</view>
+      <view class="sos-steps">
+        <view>• 吸气 4 拍</view>
+        <view>• 停留 4 拍</view>
+        <view>• 呼气 4 拍</view>
+        <view>• 停留 4 拍，循环 8 次</view>
+      </view>
+      <view class="btn-row">
+        <view class="btn-ghost" bindtap="returnToChat">返回对话</view>
+        <view class="btn-ghost" bindtap="skipSOS">跳过并返回镜子</view>
+        <view class="btn-primary" data-duration="120" bindtap="startTimer">开始 2:00</view>
+      </view>
+      <view class="countdown" tt:if="{{secondsLeft>0 || countdownText}}">{{countdownText}}</view>
+    </view>
+  </view>
+
+  <!-- 功能卡（横向滚动） -->
+  <scroll-view scroll-x="true" class="skills-bar" tt:if="{{skills.length}}">
+    <block tt:for="{{skills}}" tt:key="id">
+      <view class="skill">
+        <view class="skill-title">{{item.title}}</view>
+        <view class="subtle">{{item.meta}}</view>
+        <view class="btn-ghost" style="margin-top:12rpx" data-id="{{item.id}}" bindtap="openSkill">查看并练习</view>
+      </view>
+    </block>
+  </scroll-view>
+
+  <!-- 输入区 -->
+  <view class="input-bar" tt:if="{{tab==='chat'}}">
+    <input class="input" placeholder="和明镜说点什么……" value="{{inp}}" bindinput="onInp" confirm-type="send" bindconfirm="send"/>
+    <view class="btn-primary {{sending?'disabled':''}}" bindtap="send">{{sending?'生成中…':'发送'}}</view>
+  </view>
+
+  <!-- ✅ 底部固定：进入里世界（根据是否显示输入条，自动上移避免遮挡） -->
+  <view class="enter-inner-fixed"
+        style="bottom: {{tab==='chat' ? '120rpx' : '32rpx'}};"
+        bindtap="goInner">
+    进入里世界
+  </view>
+
+  <!-- 功能卡弹层 -->
+  <view class="sheet {{showSkill?'show':''}}">
+    <view class="inner">
+      <view class="handle"></view>
+      <view style="font-weight:700;margin-bottom:8rpx;">{{skill.title}}</view>
+      <view style="margin-left:24rpx">
+        <block tt:for="{{skill.steps}}" tt:key="*this">
+          <view>• {{item}}</view>
+        </block>
+      </view>
+
+      <view class="subtle" style="margin-top:12rpx">{{skill.alt}}</view>
+
+      <view class="btn-row">
+        <view class="btn-ghost" bindtap="returnToChat">返回对话</view>
+        <view class="btn-ghost" bindtap="skipSkill">跳过并返回镜子</view>
+        <view class="btn-primary" data-duration="120" bindtap="startTimer">开始 2:00</view>
+      </view>
+
+      <view class="countdown" tt:if="{{secondsLeft>0 || countdownText}}">{{countdownText}}</view>
+    </view>
+  </view>
+</view>

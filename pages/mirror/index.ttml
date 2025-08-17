@@ -1,0 +1,60 @@
+<view class="mirror-page" catchtouchmove="true">
+  <!-- S0 初始镜面 -->
+  <view id="mirrorSurface"
+        class="mirror-surface"
+        bindtouchstart="onInitialTouchStart"
+        tt:if="{{currentState==='initial'}}">
+    <view class="mirror-reflections">
+      <view class="reflection reflection-1"></view>
+      <view class="reflection reflection-2"></view>
+      <view class="reflection reflection-3"></view>
+    </view>
+    <view class="mirror-hint">
+      <text class="hint-text">轻触镜面</text>
+      <view class="hint-arrow">↓</view>
+    </view>
+
+    <!-- 水波 -->
+    <view class="ripple-layer">
+      <block tt:for="{{ripples}}" tt:key="id">
+        <view class="ripple" style="left: {{item.x}}px; top: {{item.y}}px; width: {{item.size}}px; height: {{item.size}}px;"></view>
+      </block>
+    </view>
+  </view>
+
+
+  <!-- S1 我在 -->
+  <view class="presence-layer" tt:if="{{currentState==='presence'}}">
+    <text class="presence-text">我在</text>
+  </view>
+
+  <!-- S2 镜中弹出菜单 -->
+  <view class="menu-in-mirror" tt:if="{{currentState==='menu'}}" catchtouchmove="true">
+    <view class="menu-backdrop"></view>
+    <view class="menu-content {{menuAnimated ? 'modal-in' : ''}}">
+      <view class="menu-header">
+        <text class="menu-title">你想要如何告诉我？</text>
+        <text class="menu-subtitle">选择最舒适的方式表达自己</text>
+      </view>
+
+      <view class="menu-actions">
+        <view class="action-card" bindtap="goVoice" hover-class="action-hover" hover-stay-time="80">
+          <view class="action-icon">🎙️</view>
+          <text class="action-label">语音倾诉</text>
+          <text class="action-desc">按住说话，松开发送</text>
+        </view>
+        <view class="action-card" bindtap="goText" hover-class="action-hover" hover-stay-time="80">
+          <view class="action-icon">📝</view>
+          <text class="action-label">文字记录</text>
+          <text class="action-desc">键盘输入或使用模板</text>
+        </view>
+      </view>
+
+
+      <view class="close-button" bindtap="closeMenu">×</view>
+    </view>
+  </view>
+  <view class="enter-inner-fixed" bindtap="goInnerWorld">
+    进入里世界
+  </view>
+</view>

@@ -1,0 +1,50 @@
+.page{padding:16rpx 16rpx 120rpx;background:#f7f8fb;min-height:100vh}
+.chip{border:2rpx solid #e5e7eb;border-radius:9999rpx;padding:8rpx 16rpx}
+.chip.tag{background:#eef2ff;border-color:#e0e7ff;color:#4338ca}
+
+.tab{color:#64748b;padding:8rpx 10rpx;border-radius:12rpx}
+.tab.active{color:#111827;background:#e5e7eb}
+
+.chat-pane{margin:12rpx 0 14rpx;display:flex;flex-direction:column;gap:12rpx}
+.msg{max-width:85%;padding:14rpx 16rpx;border-radius:18rpx;line-height:1.6;word-break:break-word}
+.msg.user{align-self:flex-end;background:#e0f2fe;border:2rpx solid #bae6fd}
+.msg.ai{align-self:flex-start;background:#fff;border:2rpx solid #e5e7eb}
+.msg.obj{align-self:flex-start;background:#f8fafc;border:2rpx dashed #cbd5e1;color:#334155}
+
+.skills-bar{white-space:nowrap;margin:6rpx 0 16rpx}
+.skill{display:inline-block;vertical-align:top;width:420rpx;margin-right:12rpx;background:#fff;border:2rpx solid #e5e7eb;border-radius:16rpx;padding:16rpx}
+.skill-title{font-weight:700}
+.subtle{color:#64748b;font-size:24rpx;margin-top:4rpx}
+
+.input-bar{position:fixed;left:0;right:0;bottom:20rpx;display:flex;gap:8rpx;padding:0 16rpx}
+.input{flex:1;background:#fff;border:2rpx solid #e5e7eb;border-radius:14rpx;padding:14rpx 16rpx}
+.btn-primary{background:#3b82f6;color:#fff;border-radius:14rpx;padding:14rpx 22rpx}
+.btn-ghost{background:#fff;border:2rpx solid #e5e7eb;border-radius:14rpx;padding:12rpx 18rpx;color:#374151}
+.btn-primary.disabled{opacity:.6}
+
+.sheet{position:fixed;left:0;right:0;bottom:-100%;transition:bottom .22s ease;z-index:50}
+.sheet.show{bottom:0}
+.sheet .inner{background:#fff;border-radius:20rpx 20rpx 0 0;padding:20rpx;border:2rpx solid #e5e7eb}
+.handle{width:80rpx;height:10rpx;background:#e5e7eb;border-radius:9999rpx;margin:0 auto 12rpx}
+
+.sos-pane{margin:12rpx 0 14rpx}
+.sos-card{background:#fff;border:2rpx solid #e5e7eb;border-radius:16rpx;padding:16rpx}
+.sos-title{font-weight:800;margin-bottom:8rpx}
+.countdown{margin-top:12rpx;text-align:center;font-weight:800;font-size:32rpx}
+.btn-row{display:flex;gap:12rpx;justify-content:center;margin-top:12rpx}
+
+/* 底部固定的进入按钮（Chat/SOS 都显示） */
+.enter-inner-fixed{
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 60;
+    background: #111827;
+    color: #fff;
+    padding: 16rpx 28rpx;
+    border-radius: 9999rpx;
+    border: 2rpx solid #1f2937;
+    box-shadow: 0 10rpx 20rpx rgba(0,0,0,.08);
+    font-weight: 700;
+  }
+  

@@ -1,0 +1,44 @@
+<view class="page">
+    <view class="section-title">把心里话交给我……</view>
+  
+    <!-- 波形 -->
+    <view class="wave-wrap">
+      <block tt:for="{{levelBars}}" tt:key="*this">
+        <view class="bar" style="height: {{item}}rpx;"></view>
+      </block>
+      <view class="record-state">
+        <text tt:if="{{status==='recording'}}">录音中…</text>
+        <text tt:elif="{{status==='paused'}}">已暂停</text>
+        <view tt:elif="{{status==='processing'}}" class="spinner"></view>
+        <text tt:elif="{{status==='idle'}}">准备就绪</text>
+      </view>
+    </view>
+  
+    <!-- 文本（暂停后会自动把转写结果追加到这里，可手动编辑） -->
+    <textarea class="textarea"
+              placeholder="我在听，慢慢来…（暂停时会把语音转为文字追加到这里）"
+              value="{{transcript}}"
+              bindinput="onInput"/>
+  
+    <!-- 控件：主按钮 + 完成 + 清空 -->
+    <view class="controls">
+      <view class="record-btn {{status==='recording'?'on':''}}"
+            bindtap="toggleRecord">
+        <text tt:if="{{status==='recording'}}">暂停</text>
+        <text tt:elif="{{status==='paused'}}">继续</text>
+        <text tt:elif="{{status==='processing'}}">处理中</text>
+        <text tt:else>开始</text>
+      </view>
+  
+      <view class="btn-row">
+        <view class="btn-primary {{canFinish? '' : 'btn-disabled'}}"
+              bindtap="finish"
+              hover-class="none">完成记录</view>
+        <view class="btn-ghost" bindtap="clearAll">清空</view>
+      </view>
+    </view>
+  </view>
+  <view style="margin-top:12rpx;padding:16rpx;border:2rpx dashed #e5e7eb;border-radius:12rpx;color:#64748b;font-size:22rpx;white-space:pre-wrap;">
+    {{debug}}
+  </view>
+  

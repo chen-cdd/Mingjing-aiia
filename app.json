@@ -1,0 +1,19 @@
+{
+    "pages": [
+      "pages/mirror/index",
+      "pages/onboarding/index",
+      "pages/voice/index",
+      "pages/text/index",
+      "pages/analysis/index",
+      "pages/chat/index",
+      "pages/rescue/index",
+      "pages/inner/index"
+    ],
+    "window": {
+      "navigationBarTitleText": "明镜",
+      "navigationBarBackgroundColor": "#f6f8fb",
+      "backgroundColor": "#f6f8fb",
+      "navigationBarTextStyle": "black"
+    }
+  }
+  

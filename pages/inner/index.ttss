@@ -1,0 +1,80 @@
+.page{
+    min-height:100vh;
+    background: radial-gradient(120% 120% at 50% -10%, #f0f9ff 0%, #f8fafc 60%, #eef2ff 100%);
+  }
+  .content{ padding: 16rpx 20rpx 24rpx; box-sizing: border-box; }
+  
+  /* 顶部样式公用 */
+  .section{ padding: 6rpx 0; }
+  .section-title{ display:flex; align-items:center; gap:8rpx; font-weight:800; color:#0f172a; margin: 6rpx 2rpx 10rpx; }
+  .section-title.small{ font-size:26rpx; margin: 0 2rpx 8rpx; }
+  .title-dot{ width:16rpx;height:16rpx;border-radius:50%; background:linear-gradient(135deg,#60a5fa,#a78bfa); display:inline-block; }
+  
+  /* 芯片/标签 */
+  .chips{ display:flex; flex-wrap:wrap; gap:10rpx; }
+  .chip{ padding:10rpx 16rpx; border-radius:9999rpx; background:#fff; border:2rpx solid #e5e7eb; color:#374151; box-shadow:0 6rpx 12rpx rgba(15,23,42,.04); }
+  .cloud{ display:flex; flex-wrap:wrap; gap:14rpx; }
+  .cloud-chip{ background:linear-gradient(180deg,#fff,#f8fafc); border-color:#e2e8f0; }
+  
+  /* 卡片 / 时间线 */
+  .card{ background:#fff; border:2rpx solid #e5e7eb; border-radius:16rpx; padding:16rpx; box-shadow:0 10rpx 20rpx rgba(15,23,42,.04); }
+  .timeline{ display:flex; flex-direction:column; gap:12rpx; }
+  .item{ position:relative; }
+  .item::before{ content:''; position:absolute; left:-10rpx; top:14rpx; bottom:14rpx; width:4rpx; background:linear-gradient(180deg,#93c5fd,#c4b5fd); border-radius:4rpx; }
+  .time{ color:#64748b; font-size:24rpx; margin-bottom:6rpx; }
+  .summary{ color:#0f172a; }
+  
+  /* 技能卡滚动 */
+  .skills{ white-space:nowrap; padding-bottom:4rpx; }
+  .skill{ display:inline-block; width:480rpx; margin-right:12rpx; background:#0f172a; color:#e5e7eb; border:2rpx solid #1f2937; border-radius:16rpx; padding:16rpx; }
+  .skill-title{ font-weight:800; }
+  .subtle{ color:#64748b; font-size:24rpx; margin-top:4rpx; }
+  
+  /* 微行动 */
+  .actions{ display:flex; flex-direction:column; gap:10rpx; margin-top:6rpx; }
+  .action-row{ display:flex; align-items:center; gap:10rpx; background:#fff; border:2rpx solid #e5e7eb; border-radius:16rpx; padding:12rpx 14rpx; }
+  .action-row .dot{ width:12rpx;height:12rpx;border-radius:50%; background:linear-gradient(135deg,#60a5fa,#a78bfa); }
+  .action-text{ flex:1; color:#0f172a; }
+  .action-time{ color:#64748b; font-size:24rpx; }
+  
+  /* 关系图 */
+  .graph-wrap{ background:#fff; border:2rpx solid #e5e7eb; border-radius:20rpx; overflow:hidden; box-shadow:0 10rpx 20rpx rgba(15,23,42,.04); }
+  .detail-card{ margin-top:16rpx; }
+  .person-detail{ color:#334155; white-space:pre-wrap; }
+  
+  /* 事件行 */
+  .ev-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:12rpx; padding:12rpx 0; border-top:2rpx dashed #e5e7eb; }
+  .ev-row:first-child{ border-top:none; }
+  .ev-left{ flex:1; }
+  .ev-time{ color:#64748b; font-size:24rpx; margin-bottom:4rpx; }
+  .ev-summary{ color:#0f172a; }
+  .ev-edit{ color:#4338ca; font-size:24rpx; padding:6rpx 8rpx; }
+  
+  /* 底部导航 */
+  .bottom-nav{
+    position:fixed; left:0; right:0; bottom:0; height:100rpx;
+    background:#ffffffee; backdrop-filter: blur(8rpx);
+    border-top:2rpx solid #e5e7eb; display:flex; z-index:99;
+  }
+  .nav-item{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#6b7280; }
+  .nav-item.on{ color:#111827; }
+  .nav-ico{ font-size:34rpx; line-height:36rpx; }
+  .nav-txt{ font-size:24rpx; margin-top:2rpx; }
+  
+  /* 弹层 */
+  .sheet{ position:fixed; left:0; right:0; bottom:-100%; transition:bottom .22s ease; z-index:100; }
+  .sheet.show{ bottom:0; }
+  .sheet .inner{ background:#fff; border-top-left-radius:20rpx; border-top-right-radius:20rpx; border:2rpx solid #e5e7eb; padding:16rpx; }
+  .handle{ width:80rpx; height:8rpx; border-radius:9999rpx; background:#e5e7eb; margin:0 auto 12rpx; }
+  .sheet-title{ font-weight:800; margin-bottom:8rpx; }
+  .form-row{ margin-top:10rpx; }
+  .label{ color:#64748b; font-size:24rpx; margin-bottom:6rpx; }
+  .input{ background:#f8fafc; border:2rpx solid #e5e7eb; border-radius:12rpx; padding:10rpx 12rpx; }
+  .textarea{ min-height:140rpx; background:#f8fafc; border:2rpx solid #e5e7eb; border-radius:12rpx; padding:10rpx 12rpx; }
+  
+  /* 按钮 */
+  .btn-row{ display:flex; gap:12rpx; justify-content:flex-end; margin-top:12rpx; }
+  .btn-primary{ background:#111827; color:#fff; font-weight:700; padding:12rpx 18rpx; border-radius:16rpx; border:2rpx solid #1f2937; text-align:center; }
+  .btn-ghost{ background:#fff; border:2rpx solid #e5e7eb; border-radius:16rpx; padding:12rpx 18rpx; color:#374151; text-align:center; }
+  .btn-danger{ background:#ef4444; color:#fff; border:2rpx solid #dc2626; border-radius:16rpx; padding:12rpx 18rpx; text-align:center; }
+  

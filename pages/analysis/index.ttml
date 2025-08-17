@@ -1,0 +1,114 @@
+<view class="page">
+  <!-- 角色抬头 -->
+  <view class="ai-header">
+    <view class="ai-avatar">✨</view>
+    <view class="ai-meta">
+      <text class="ai-name">明镜 · 分析官</text>
+      <text class="ai-sub">我会客观梳理你的叙述</text>
+    </view>
+  </view>
+
+  <!-- 来源条（完成后展示） -->
+  <view class="ai-source" tt:if="{{!loading}}">
+    来自 {{sourceFrom==='deepseek' ? 'DeepSeek' : '离线分析'}} · {{latencyText}}
+    <text tt:if="{{modelName}}"> · {{modelName}}</text>
+    <text tt:if="{{tokenTotal}}"> · {{tokenTotal}} tokens</text>
+  </view>
+
+  <!-- 加载态：AI 气泡 + 骨架屏 -->
+  <view tt:if="{{loading}}">
+    <view class="ai-bubble">
+      <view class="typing">
+        <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+      </view>
+      <text>正在分析你的记录…</text>
+    </view>
+    <view class="skeleton">
+      <view class="sk-line w80"></view>
+      <view class="sk-line w60"></view>
+      <view class="sk-gap"></view>
+      <view class="sk-line w50"></view>
+      <view class="sk-line w70"></view>
+    </view>
+  </view>
+
+  <!-- 结果卡片 -->
+  <view class="card" tt:if="{{!loading}}">
+    <!-- 摘要 -->
+    <view>
+      <text class="title">摘要</text>
+      <view class="summary">{{summary}}</view>
+    </view>
+
+    <!-- 话题（#标签） -->
+    <view class="mt">
+      <text class="title">话题</text>
+      <view class="chips">
+        <block tt:for="{{topics}}" tt:key="*this">
+          <view class="chip">#{{item}}</view>
+        </block>
+        <text tt:if="{{!topics || topics.length===0}}">—</text>
+      </view>
+    </view>
+
+    <!-- 涉及对象（人物标签） -->
+    <view class="mt">
+      <text class="title">涉及对象</text>
+      <view class="chips">
+        <block tt:for="{{persons}}" tt:key="*this">
+          <view class="chip person">{{item}}</view>
+        </block>
+        <text tt:if="{{!persons || persons.length===0}}">—</text>
+      </view>
+    </view>
+
+    <!-- 情绪与强度（条形进度） -->
+    <view class="mt">
+      <text class="title">情绪与强度</text>
+      <block tt:for="{{emotions}}" tt:key="name">
+        <view class="emo-row">
+          <text class="emo-name">{{item.name}}</text>
+          <view class="emo-bar">
+            <view class="emo-fill" style="width: {{item.pct}}%;"></view>
+          </view>
+          <text class="emo-score">{{item.pct}}%</text>
+        </view>
+      </block>
+      <text tt:if="{{!emotions || emotions.length===0}}">—</text>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="btn-row">
+    <view class="btn-ghost" bindtap="back">返回修改</view>
+    <view class="btn-primary" bindtap="continue">是的，继续</view>
+  </view>
+
+  <!-- 已归档弹层 -->
+  <view class="sheet {{showArchive?'show':''}}">
+    <view class="inner">
+      <view class="handle"></view>
+      <view class="sheet-title">已归档</view>
+      <input placeholder="#添加新话题（回车确认）" bindconfirm="addTopic" confirm-type="done"/>
+      <view class="chips mt-12">
+        <block tt:for="{{topicChips}}" tt:key="*this">
+          <view class="chip">#{{item}}</view>
+        </block>
+      </view>
+      <view class="btn-row"><view class="btn-primary" bindtap="goChat">进入与镜子聊聊</view></view>
+    </view>
+  </view>
+
+  <!-- 风险提示弹层 -->
+  <view class="sheet {{showRisk?'show':''}}">
+    <view class="inner risk">
+      <view class="handle"></view>
+      <view class="sheet-title">我现在不继续</view>
+      <view>我更建议你获得更安全的帮助。若你有受伤风险，请立刻联系身边可信的人。</view>
+      <view class="btn-row">
+        <view class="btn-primary" bindtap="contact">联系身边的人</view>
+        <view class="btn-ghost" bindtap="riskContinue">我已安全，继续</view>
+      </view>
+    </view>
+  </view>
+</view>

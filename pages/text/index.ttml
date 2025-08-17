@@ -1,0 +1,6 @@
+<view class="page">
+    <view class="section-title">写下来，也很好</view>
+    <textarea class="textarea" placeholder="把你当下的想法写下来……" bindinput="onInput" value="{{text}}"/>
+    <view class="btn-row"><view class="btn-primary" bindtap="save">保存想法</view></view>
+  </view>
+  
