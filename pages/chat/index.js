@@ -79,6 +79,13 @@ Page({
       // 合并技能卡（去重）
       const skills = mergeSkills(this.data.skills, out.skills || []);
       this.setData({ msgs: next, skills, sending:false });
+      
+      // 立即记录LLM生成的练习内容到缓存
+      if (out.skills && out.skills.length > 0) {
+        console.log('保存LLM生成的技能卡:', out.skills);
+        this._saveGeneratedSkills(out.skills);
+        tt.showToast({ title: `已记录${out.skills.length}个练习`, icon: 'success', duration: 1500 });
+      }
     }catch(e){
       cancelChat = null;
       this.setData({ sending:false });
@@ -235,8 +242,61 @@ Page({
     stored.skills = skills;
   }
   
+  // 更新generatedSkills中对应记录的完成状态
+  const generatedSkills = stored.generatedSkills || [];
+  const generatedSkillIndex = generatedSkills.findIndex(s => s.id === skillId);
+  if (generatedSkillIndex !== -1) {
+    generatedSkills[generatedSkillIndex].completed = true;
+    generatedSkills[generatedSkillIndex].completedAt = new Date().toISOString();
+    generatedSkills[generatedSkillIndex].completedTime = new Date().toLocaleString('zh-CN', { 
+      month: '2-digit', 
+      day: '2-digit', 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+    stored.generatedSkills = generatedSkills;
+  }
+  
   tt.setStorageSync('inner_events_v1', stored);
 },
+
+  // 保存LLM生成的练习内容（无论是否完成）
+  _saveGeneratedSkills(skills) {
+    if (!skills || skills.length === 0) return;
+    
+    const stored = tt.getStorageSync('inner_events_v1') || {};
+    const generatedSkills = stored.generatedSkills || [];
+    
+    skills.forEach(skill => {
+      if (!skill || !skill.title) return;
+      
+      const skillRecord = {
+        id: skill.id || skill.title.toLowerCase().replace(/\s+/g, '_'),
+        title: skill.title,
+        meta: skill.meta || '练习技能',
+        steps: skill.steps || [],
+        generatedAt: new Date().toISOString(),
+        generatedTime: new Date().toLocaleString('zh-CN', { 
+          month: '2-digit', 
+          day: '2-digit', 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        }),
+        completed: false,
+        source: 'llm_generated'
+      };
+      
+      // 检查是否已存在相同的技能记录
+      const existingIndex = generatedSkills.findIndex(s => s.id === skillRecord.id);
+      if (existingIndex === -1) {
+        generatedSkills.unshift(skillRecord);
+      }
+    });
+    
+    stored.generatedSkills = generatedSkills;
+    tt.setStorageSync('inner_events_v1', stored);
+    console.log('已保存generatedSkills到缓存:', generatedSkills);
+  },
 
   _goMirror(){
     try {

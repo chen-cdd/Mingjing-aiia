@@ -1,37 +1,115 @@
 <view class="page">
+    <!-- 关系图卡片 -->
     <view class="card">
-      <view class="card-title">关系图</view>
-      <canvas class="graph" canvas-id="graph" id="graph" bindtap="tapGraph"></canvas>
-      <view class="hint">点击上方节点以查看人物详情与事件</view>
+      <view class="card-title">🌐 人物关系图</view>
+      <view class="graph-container">
+        <canvas class="graph" canvas-id="graph" id="graph" bindtap="tapGraph"></canvas>
+        <view class="graph-overlay" tt:if="{{persons.length === 0}}">
+          <view class="overlay-content">
+            <text class="overlay-icon">👥</text>
+            <text class="overlay-text">暂无人物关系</text>
+            <text class="overlay-desc">记录一些包含人物的事件，系统将自动构建关系图</text>
+          </view>
+        </view>
+      </view>
+      <view class="hint">💡 点击节点查看人物详情与相关事件</view>
+      <view class="graph-stats" tt:if="{{persons.length > 0}}">
+        <view class="stat-item">
+          <text class="stat-number">{{persons.length}}</text>
+          <text class="stat-label">人物</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-number">{{totalEvents}}</text>
+          <text class="stat-label">事件</text>
+        </view>
+      </view>
     </view>
   
-    <view class="card">
+    <!-- 人物信息卡片 -->
+    <view class="card" tt:if="{{selectedPersonId}}">
       <view class="card-title-row">
-        <view class="card-title">{{personTitle}}</view>
-        <button tt:if="{{selectedPersonId && selectedPersonId!=='me'}}" class="primary" size="mini" bindtap="chatWithPerson">与该人物分身对话</button>
+        <view class="person-header">
+          <view class="person-avatar">{{personAvatar}}</view>
+          <view class="person-details">
+            <view class="card-title">{{personTitle}}</view>
+            <view class="person-subtitle">{{personSubtitle}}</view>
+          </view>
+        </view>
+        <view class="person-actions">
+          <button tt:if="{{selectedPersonId !== 'me'}}" class="primary" size="mini" bindtap="chatWithPerson">
+            💬 与TA对话
+          </button>
+          <button tt:if="{{selectedPersonId !== 'me'}}" class="secondary" size="mini" bindtap="viewPersonProfile">
+            ⚙️ 角色设定
+          </button>
+        </view>
       </view>
       <view class="person-info">{{personInfo}}</view>
     </view>
   
+    <!-- 事件列表卡片 -->
     <view class="card">
       <view class="card-title-row">
-        <view class="card-title">相关事件（{{selectedEvents.length}}）</view>
-        <button size="mini" class="primary" bindtap="addEvent" tt:if="{{selectedPersonId}}">新增事件</button>
+        <view class="card-title">
+          📅 相关事件
+          <text class="event-count" tt:if="{{selectedPersonId}}">({{selectedEvents.length}})</text>
+        </view>
+        <button size="mini" class="primary" bindtap="addEvent" tt:if="{{selectedPersonId}}">
+          ➕ 新增事件
+        </button>
       </view>
   
-      <view class="event-list" tt:if="{{selectedPersonId}}">
-        <view class="event-item" tt:for="{{selectedEvents}}" tt:key="id">
+      <view class="event-list" tt:if="{{selectedPersonId && selectedEvents.length > 0}}">
+        <view class="event-item" tt:for="{{selectedEvents}}" tt:key="id" bindtap="viewEventDetail" data-event="{{item}}">
+          <view class="event-timeline-dot"></view>
           <view class="event-main">
-            <view class="event-time">{{item.time}}</view>
+            <view class="event-header">
+              <view class="event-time">{{item.time}}</view>
+              <view class="event-status">{{item.status || '已完成'}}</view>
+            </view>
             <view class="event-summary">{{item.summary}}</view>
-            <view class="event-topics">
+            <view class="event-topics" tt:if="{{item.topics && item.topics.length > 0}}">
               <text class="topic" tt:for="{{item.topics}}" tt:key="index">#{{item}}</text>
+            </view>
+            <view class="event-emotions" tt:if="{{item.emotions && item.emotions.length > 0}}">
+              <text class="emotion" tt:for="{{item.emotions}}" tt:key="name">{{item.name}}</text>
             </view>
           </view>
         </view>
       </view>
   
-      <view class="empty" tt:if="{{!selectedPersonId}}">请先点击关系图选择人物</view>
-      <view class="empty" tt:if="{{selectedPersonId && selectedEvents.length===0}}">暂无事件，点击右上角"新增事件"</view>
+      <view class="empty" tt:if="{{!selectedPersonId}}">
+        <text class="empty-text">请先点击关系图选择人物</text>
+        <text class="empty-desc">选择一个人物节点来查看相关事件</text>
+      </view>
+      
+      <view class="empty" tt:if="{{selectedPersonId && selectedEvents.length===0}}">
+        <text class="empty-text">暂无相关事件</text>
+        <text class="empty-desc">点击右上角"新增事件"来添加与{{personTitle}}相关的事件</text>
+      </view>
+    </view>
+    
+    <!-- 角色设定弹窗 -->
+    <view class="modal-overlay" tt:if="{{showProfileModal}}" bindtap="closeProfileModal">
+      <view class="modal-content" catchtap="stopPropagation">
+        <view class="modal-header">
+          <text class="modal-title">🎭 {{selectedPersonName}} 的角色设定</text>
+          <button class="modal-close" bindtap="closeProfileModal">✕</button>
+        </view>
+        <view class="modal-body">
+          <view class="profile-section">
+            <text class="section-title">AI生成的角色设定</text>
+            <textarea class="profile-textarea" value="{{aiGeneratedProfile}}" disabled></textarea>
+          </view>
+          <view class="profile-section">
+            <text class="section-title">自定义设定</text>
+            <textarea class="profile-textarea" placeholder="在此输入您对该角色的自定义设定..." value="{{customProfile}}" bindinput="onCustomProfileInput"></textarea>
+          </view>
+        </view>
+        <view class="modal-footer">
+          <button class="secondary" bindtap="regenerateProfile">🔄 重新生成</button>
+          <button class="primary" bindtap="saveProfile">💾 保存设定</button>
+        </view>
+      </view>
     </view>
   </view>

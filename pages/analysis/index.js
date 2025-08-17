@@ -89,6 +89,7 @@ Page({
       text: app.globalData.draft.text,
       summary: this.data.summary,
       topics: this.data.topicChips,
+      persons: this.data.persons,  // 保存分析出的人物信息
       emotions: this.data.emotions,
       createTime: new Date().toISOString(),
       updateTime: new Date().toISOString()

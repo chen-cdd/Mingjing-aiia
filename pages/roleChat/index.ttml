@@ -1,0 +1,108 @@
+<!--pages/roleChat/index.ttml-->
+<view class="chat-container">
+  <!-- 顶部导航栏 -->
+  <view class="chat-header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="header-center">
+      <text class="chat-title">与{{personName}}对话</text>
+    </view>
+    <view class="header-right" bindtap="viewProfile">
+      <text class="profile-icon">⚙</text>
+    </view>
+  </view>
+
+  <!-- 对话区域 -->
+  <scroll-view class="chat-messages" scroll-y="true" scroll-into-view="msg-{{msgs.length}}" scroll-with-animation="true">
+    <view class="messages-container">
+      <block tt:for="{{msgs}}" tt:key="id">
+        <view class="message-item {{item.role}}" id="msg-{{index}}">
+          <view class="message-avatar">
+            <text class="avatar-text" tt:if="{{item.role === 'ai'}}">{{personName.charAt(0)}}</text>
+            <text class="avatar-text" tt:else>我</text>
+          </view>
+          <view class="message-content">
+            <view class="message-bubble">
+              <text class="message-text">{{item.text}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+      
+      <!-- 发送中提示 -->
+      <view class="message-item ai" tt:if="{{sending}}">
+        <view class="message-avatar">
+          <text class="avatar-text">{{personName.charAt(0)}}</text>
+        </view>
+        <view class="message-content">
+          <view class="message-bubble typing">
+            <view class="typing-indicator">
+              <view class="dot"></view>
+              <view class="dot"></view>
+              <view class="dot"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="chat-input">
+    <view class="input-container">
+      <textarea 
+        class="input-field" 
+        placeholder="输入消息..." 
+        value="{{inp}}" 
+        bindinput="onInp"
+        auto-height
+        maxlength="500"
+        show-confirm-bar="false"
+      ></textarea>
+      <view class="send-button {{inp.length > 0 && !sending ? 'active' : ''}}" bindtap="send">
+        <text class="send-icon">→</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 角色设定弹窗 -->
+  <view class="modal-overlay" tt:if="{{showProfileModal}}" bindtap="closeProfileModal">
+    <view class="modal-content" bindtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">角色设定</text>
+        <view class="close-button" bindtap="closeProfileModal">
+          <text class="close-icon">×</text>
+        </view>
+      </view>
+      
+      <view class="modal-body">
+        <view class="profile-section" tt:if="{{!isEditingProfile}}">
+          <view class="section-title">当前角色设定</view>
+          <view class="profile-content">
+            <text class="profile-text">{{personProfile}}</text>
+          </view>
+          <view class="profile-actions">
+            <button class="action-button secondary" bindtap="regenerateProfile">重新生成</button>
+            <button class="action-button primary" bindtap="editProfile">编辑设定</button>
+          </view>
+        </view>
+        
+        <view class="profile-section" tt:if="{{isEditingProfile}}">
+          <view class="section-title">编辑角色设定</view>
+          <textarea 
+            class="profile-textarea" 
+            placeholder="请输入角色设定..." 
+            value="{{customProfile}}" 
+            bindinput="onCustomProfileInput"
+            maxlength="1000"
+          ></textarea>
+          <view class="profile-actions">
+            <button class="action-button secondary" bindtap="cancelEdit">取消</button>
+            <button class="action-button primary" bindtap="saveProfile">保存设定</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

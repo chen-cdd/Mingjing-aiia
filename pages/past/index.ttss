@@ -16,11 +16,66 @@
   font-weight: 600;
   margin-bottom: 20rpx;
   color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cloud-tip {
+  font-size: 24rpx;
+  font-weight: 400;
+  color: #999;
+}
+
+.cloud-container {
+  position: relative;
+  min-height: 300rpx;
 }
 
 .cloud {
   width: 100%;
   height: 300rpx;
+  border-radius: 12rpx;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  box-shadow: inset 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.cloud:active {
+  transform: scale(0.98);
+  box-shadow: inset 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.cloud-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300rpx;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12rpx;
+  border: 2rpx dashed #dee2e6;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.6;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #6c757d;
+  margin-bottom: 12rpx;
+  font-weight: 500;
+}
+
+.empty-desc {
+  font-size: 24rpx;
+  color: #adb5bd;
+  text-align: center;
+  line-height: 1.4;
+  padding: 0 40rpx;
 }
 
 .timeline {

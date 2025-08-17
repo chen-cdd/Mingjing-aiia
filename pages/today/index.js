@@ -48,8 +48,19 @@ Page({
       }
     });
     
+    // 从LLM生成的练习内容中获取技能卡
+    const generatedSkills = stored.generatedSkills || [];
+    console.log('加载的generatedSkills:', generatedSkills);
+    const llmSkills = generatedSkills.map(skill => ({
+      id: skill.id,
+      title: skill.title,
+      meta: skill.completed ? `${skill.meta} ✅` : skill.meta,
+      steps: skill.steps || []
+    }));
+    console.log('转换后的llmSkills:', llmSkills);
+    
     // 合并所有技能卡
-    const allSkills = [...storedSkills, ...chatSkills];
+    const allSkills = [...storedSkills, ...chatSkills, ...llmSkills];
     const uniqueSkills = [];
     const skillIds = new Set();
     

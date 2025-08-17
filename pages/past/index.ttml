@@ -1,7 +1,17 @@
 <view class="page">
   <view class="card">
-    <view class="card-title">情绪云图</view>
-    <canvas class="cloud" canvas-id="cloud" id="cloud"></canvas>
+    <view class="card-title">
+      情绪云图
+      <text class="cloud-tip">点击情绪词查看详情</text>
+    </view>
+    <view class="cloud-container">
+      <canvas class="cloud" canvas-id="cloud" id="cloud" bindtap="onCloudTap" wx:if="{{cloud.length > 0}}"></canvas>
+      <view class="cloud-empty" wx:else>
+        <view class="empty-icon">🌙</view>
+        <text class="empty-text">暂无情绪数据</text>
+        <text class="empty-desc">记录一些心情日记，我们将为您生成情绪云图</text>
+      </view>
+    </view>
   </view>
 
   <view class="card">
