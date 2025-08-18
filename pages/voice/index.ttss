@@ -1,33 +1,165 @@
-.page{padding:16rpx 16rpx 160rpx}
-.section-title{font-weight:700;margin:16rpx 0 24rpx}
-
-.wave-wrap{
-  position:relative; height:300rpx; background:#0f172a0a;
-  border:2rpx dashed #c7d2fe; border-radius:24rpx;
-  display:flex; align-items:flex-end; justify-content:center; gap:6rpx; padding:0 20rpx; overflow:hidden;
+/* 页面整体样式 */
+.page {
+  padding: 40rpx;
+  background-color: #f5f9ff; /* 更轻柔的蓝色背景 */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-.bar{width:8rpx; background:#60a5fa; border-radius:6rpx 6rpx 0 0; transition:height .12s ease}
-.record-state{position:absolute; left:16rpx; top:16rpx; color:#64748b; display:flex; align-items:center; gap:10rpx}
-.spinner{width:28rpx;height:28rpx;border-radius:9999rpx;border:4rpx solid #c7d2fe;border-top-color:transparent;animation:spin .9s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 
-.textarea{border:2rpx solid #e5e7eb;border-radius:20rpx;padding:20rpx;min-height:300rpx;margin-top:16rpx}
-
-.controls{position:fixed; left:0; right:0; bottom:28rpx; display:flex; flex-direction:column; align-items:center; gap:18rpx}
-.record-btn{
-  width:180rpx;height:180rpx;border-radius:9999rpx; background:linear-gradient(180deg,#e0f2fe,#bfdbfe);
-  color:#1f2937; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:32rpx;
-  box-shadow:0 18rpx 46rpx rgba(37,99,235,.2), inset 0 -6rpx 12rpx rgba(255,255,255,.6);
-  border:4rpx solid #93c5fd;
+/* 标题样式 */
+.section-title {
+  font-size: 36rpx;
+  color: #5a6d8a; /* 柔和的蓝灰色 */
+  text-align: center;
+  font-weight: 500;
+  margin: 30rpx 0 50rpx;
+  letter-spacing: 2rpx;
 }
-.record-btn.on{background:linear-gradient(180deg,#fecaca,#fca5a5); border-color:#f87171; color:#7f1d1d}
 
-.btn-row{display:flex;gap:16rpx}
-.btn-primary{background:#3b82f6;color:#fff;border-radius:24rpx;padding:20rpx 28rpx;text-align:center}
-.btn-ghost{background:#fff;border:2rpx solid #e5e7eb;border-radius:24rpx;padding:20rpx 28rpx;text-align:center;color:#374151}
-.btn-disabled{opacity:.5}
+/* 波形容器 */
+.wave-wrap {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200rpx;
+  margin-bottom: 40rpx;
+  position: relative;
+}
 
-.debug{
-  margin-top:12rpx;padding:16rpx;border:2rpx dashed #e5e7eb;border-radius:12rpx;
-  color:#64748b;font-size:22rpx;white-space:pre-wrap;width:94%;
+/* 动态波形条 - 使用马卡龙蓝色 */
+.bar {
+  width: 8rpx;
+  background-color: #89c4f4; /* 马卡龙蓝 */
+  border-radius: 4rpx;
+  margin: 0 3rpx;
+  transition: height 0.2s ease;
+}
+
+/* 录音状态文本 */
+.record-state {
+  position: absolute;
+  bottom: 20rpx;
+  text-align: center;
+  width: 100%;
+  font-size: 28rpx;
+  color: #8b9dc1; /* 柔和的蓝灰色 */
+}
+
+/* 加载动画 */
+.spinner {
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid rgba(137, 196, 244, 0.2); /* 马卡龙蓝半透明 */
+  border-top-color: #89c4f4; /* 马卡龙蓝 */
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: spin 1s linear infinite;
+}
+
+/* 文本输入区域 */
+.textarea {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  min-height: 240rpx;
+  font-size: 32rpx;
+  line-height: 1.6;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  margin-bottom: 40rpx;
+  border: 1rpx solid #e1e8f0; /* 轻柔的蓝色边框 */
+}
+
+/* 控制区域 */
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40rpx;
+}
+
+/* 主录音按钮 - 使用马卡龙粉色 */
+.record-btn {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  background: #ffb8c6; /* 马卡龙粉 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: white;
+  box-shadow: 0 4rpx 12rpx rgba(255, 184, 198, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* 录音中状态 - 使用马卡龙红色 */
+.record-btn.on {
+  background: #ff6b81; /* 马卡龙红 */
+  transform: scale(1.05);
+  box-shadow: 0 6rpx 20rpx rgba(255, 107, 129, 0.3);
+}
+
+/* 按钮行 */
+.btn-row {
+  display: flex;
+  gap: 30rpx;
+  width: 100%;
+  justify-content: center;
+}
+
+/* 主要按钮 - 使用马卡龙蓝色 */
+.btn-primary {
+  background: #89c4f4; /* 马卡龙蓝 */
+  color: white;
+  padding: 20rpx 50rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 12rpx rgba(137, 196, 244, 0.3);
+}
+
+/* 次要按钮 - 使用马卡龙绿色 */
+.btn-secondary {
+  background: #a8e6cf; /* 马卡龙绿 */
+  color: white;
+  padding: 20rpx 50rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 12rpx rgba(168, 230, 207, 0.3);
+}
+
+/* 禁用状态 */
+.btn-disabled {
+  background: #cccccc !important;
+  box-shadow: none !important;
+  opacity: 0.7;
+}
+
+/* 幽灵按钮 - 使用马卡龙紫色边框 */
+.btn-ghost {
+  padding: 20rpx 50rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  border: 1rpx solid #b8b5ff; /* 马卡龙紫 */
+  color: #8b9dc1; /* 柔和的蓝灰色 */
+  transition: all 0.3s ease;
+}
+
+/* 交互反馈 */
+.btn-primary:active, .btn-ghost:active, .btn-secondary:active {
+  transform: translateY(4rpx);
+}
+
+.record-btn:active {
+  transform: scale(0.98);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

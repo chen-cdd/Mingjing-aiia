@@ -42,6 +42,8 @@
     <view class="menu-content {{menuAnimated ? 'modal-in' : ''}}">
       <view class="menu-header">
         <text class="menu-title">你想要如何告诉我？</text>
+      </view>
+      <view class="menu-header">
         <text class="menu-subtitle">选择最舒适的方式表达自己</text>
       </view>
 

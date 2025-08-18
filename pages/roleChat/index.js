@@ -15,12 +15,15 @@ Page({
     sending: false,
     showProfileModal: false,
     aiGeneratedProfile: '',
-    isEditingProfile: false
+    isEditingProfile: false,
+    // 用于模板绑定的头像首字母
+    avatarInitial: ''
   },
 
   onLoad(options) {
     const { personId, personName } = options;
-    if (!personId || !personName) {
+    const decodedName = personName ? decodeURIComponent(personName) : '';
+    if (!personId || !decodedName) {
       tt.showToast({
         title: '参数错误',
         icon: 'none'
@@ -33,12 +36,18 @@ Page({
 
     this.setData({
       personId,
-      personName
+      personName: decodedName,
+      avatarInitial: decodedName ? decodedName[0] : ''
     });
+
+    // 如果将来需要显示系统导航栏标题，这里动态设置
+    try {
+      tt.setNavigationBarTitle({ title: `与${decodedName}对话` });
+    } catch (e) {}
 
     // 生成AI角色设定
     this.generateAIProfile();
-    
+
     // 初始化对话
     this.initChat();
   },
@@ -57,9 +66,10 @@ Page({
     const welcomeMsg = {
       id: 'welcome_' + Date.now(),
       role: 'ai',
-      text: `你好！我是${this.data.personName}。很高兴能和你在这里对话。有什么想聊的吗？`
+      text: `我是${this.data.personName}。你想和我聊什么？`,
+      feeling: '' // 预留字段，不影响旧模板
     };
-    
+
     this.setData({
       msgs: [welcomeMsg]
     });
@@ -70,16 +80,16 @@ Page({
     // 从全局数据或本地存储获取人物信息
     const chatContext = app.globalData.chatContext || {};
     const personEvents = this.getPersonEvents(this.data.personId);
-    
+
     let profile = `角色名称：${this.data.personName}\n`;
     profile += `角色身份：基于真实关系的AI分身\n\n`;
-    
+
     if (personEvents.length > 0) {
       profile += `性格特征：\n`;
-      
-      // 基于事件分析性格
+
+      // 基于事件分析性格（简单启发式，可按需扩展）
       const eventTexts = personEvents.map(e => e.text || e.summary || '').join(' ');
-      
+
       if (eventTexts.includes('工作') || eventTexts.includes('项目')) {
         profile += `- 工作认真负责，善于合作\n`;
       }
@@ -92,21 +102,21 @@ Page({
       if (eventTexts.includes('设计') || eventTexts.includes('创意')) {
         profile += `- 富有创意，对艺术敏感\n`;
       }
-      
+
       profile += `\n共同经历：\n`;
       personEvents.slice(0, 5).forEach((event, index) => {
-        const summary = event.summary || event.text?.substring(0, 30) || '未知事件';
+        const summary = event.summary || (event.text ? event.text.substring(0, 30) : '') || '未知事件';
         const time = event.createTime || event.time || '未知时间';
         profile += `${index + 1}. ${summary} (${time})\n`;
       });
-      
+
       if (personEvents.length > 5) {
         profile += `... 还有 ${personEvents.length - 5} 个事件\n`;
       }
-      
+
       profile += `\n对话风格：\n`;
       profile += `- 基于以上经历，在对话中体现相应的性格特点和兴趣爱好\n`;
-      profile += `- 以朋友的身份进行对话，温暖而真诚\n`;
+      profile += `- 以朋友或者家人的身份进行对话，温暖而真诚\n`;
       profile += `- 可以回忆和讨论共同的经历\n`;
       profile += `- 提供情感支持和建议\n`;
       profile += `- 模拟未来可能的对话场景`;
@@ -117,7 +127,7 @@ Page({
       profile += `- 提供情感支持和陪伴\n`;
       profile += `- 帮助用户进行情景演练和心理准备`;
     }
-    
+
     this.setData({
       aiGeneratedProfile: profile,
       personProfile: profile
@@ -145,6 +155,65 @@ Page({
     });
   },
 
+  // === 关键新增：解析 AI 输出为 { reply, feeling }，具备强鲁棒性 ===
+  parseAiOutput(raw) {
+    if (!raw || typeof raw !== 'string') {
+      return { reply: '', feeling: '' };
+    }
+
+    const trimmed = raw.trim();
+
+    // 1) 直接 JSON 尝试
+    const tryParseJson = (s) => {
+      try {
+        const obj = JSON.parse(s);
+        if (obj && (obj.reply || obj.feeling)) {
+          return {
+            reply: (obj.reply || '').toString().trim(),
+            feeling: (obj.feeling || '').toString().trim()
+          };
+        }
+      } catch (e) {}
+      return null;
+    };
+
+    // 1.a 原文是 JSON
+    let obj = tryParseJson(trimmed);
+    if (obj) return obj;
+
+    // 1.b 代码块里的 JSON
+    const fenceMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+    if (fenceMatch && fenceMatch[1]) {
+      obj = tryParseJson(fenceMatch[1].trim());
+      if (obj) return obj;
+    }
+
+    // 2) 粗略提取：查找“我此刻的感受”或“感受：”
+    let reply = trimmed;
+    let feeling = '';
+
+    // 常见格式: ... \n我此刻的感受：xxx
+    const feelingKeys = [
+      '我此刻的感受：',
+      '我此刻的感受:',
+      '我的感受：',
+      '我的感受:',
+      '感受：',
+      '感受:'
+    ];
+
+    for (const key of feelingKeys) {
+      const idx = trimmed.lastIndexOf(key);
+      if (idx !== -1) {
+        reply = trimmed.substring(0, idx).trim();
+        feeling = trimmed.substring(idx + key.length).trim();
+        break;
+      }
+    }
+
+    return { reply, feeling };
+  },
+
   // 发送消息
   async send() {
     const text = (this.data.inp || '').trim();
@@ -155,7 +224,7 @@ Page({
       role: 'user',
       text
     };
-    
+
     const msgs = this.data.msgs.concat(userMsg);
     this.setData({
       msgs,
@@ -163,16 +232,28 @@ Page({
       sending: true
     });
 
-    // 构建对话历史
+    // 构建对话历史（保留最近8条）
     const history = msgs.slice(-8).map(m => ({
       role: m.role === 'ai' ? 'assistant' : m.role,
       content: m.text
     }));
 
-    // 添加角色设定作为系统提示
+    // === 强化版 System Prompt：要求 JSON 输出 + 第一人称 + 必带感受 ===
     const systemPrompt = {
       role: 'system',
-      content: `你现在要扮演${this.data.personName}这个角色。以下是角色设定：\n\n${this.data.personProfile}\n\n请严格按照这个角色设定进行对话，保持角色的一致性。`
+      content: `你现在要扮演【${this.data.personName}】这个角色。以下是角色设定（保持一致性）：
+
+${this.data.personProfile}
+
+交互规则（必须严格遵守）：
+1) 用第一人称表达，好像你就是【${this.data.personName}】本人。
+2) 每次回复都必须返回 JSON，不要包含多余解释或前后缀，JSON 格式如下：
+{
+  "reply": "<正常对话的文字，口语、自然、简洁，遵循角色设定>",
+  "feeling": "<你此刻的内心感受/想法，用1-2句话明晰表达情绪>"
+}
+3) 如果用户提出“未来/假设”情境，请结合性格与共同经历，做出合理回应，同时表达此刻感受。
+4) 禁止输出除上述 JSON 外的任何内容（不要带注释、不要额外文字、不要代码块标记）。`
     };
 
     const fullHistory = [systemPrompt, ...history];
@@ -191,19 +272,28 @@ Page({
       cancelChat = null;
 
       const next = this.data.msgs.slice();
-      if (out.reply) {
-        next.push({
-          id: 'a' + Date.now(),
-          role: 'ai',
-          text: out.reply
-        });
-      }
+      const raw = out && out.reply ? String(out.reply) : '';
+
+      // 解析出 reply + feeling
+      const { reply, feeling } = this.parseAiOutput(raw);
+
+      // 兜底：如果两者都为空，至少放原文
+      const finalReply = reply || raw || '（无内容）';
+      const finalFeeling = feeling || '';
+
+      next.push({
+        id: 'a' + Date.now(),
+        role: 'ai',
+        text: finalReply,
+        feeling: finalFeeling
+      });
 
       this.setData({
         msgs: next,
         sending: false
       });
     } catch (e) {
+      console.error('LLM 调用失败：', e);
       cancelChat = null;
       this.setData({
         sending: false
@@ -270,7 +360,7 @@ Page({
 
   // 保存角色设定
   saveProfile() {
-    const newProfile = this.data.customProfile.trim();
+    const newProfile = (this.data.customProfile || '').trim();
     if (!newProfile) {
       tt.showToast({
         title: '请输入角色设定',

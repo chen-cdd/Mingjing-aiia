@@ -1,0 +1,361 @@
+:root {
+  /* 深邃紫色系 - 内在探索 */
+  --primary-deep: #4c1d95;
+  --primary-medium: #5b21b6;
+  --primary-light: #7c3aed;
+  --primary-lighter: #a855f7;
+  
+  /* 宁静蓝色系 - 平静稳定 */
+  --calm-dark: #0f172a;
+  --calm-medium: #1e293b;
+  --calm-light: #334155;
+  --calm-lighter: #475569;
+  
+  /* 温和灰蓝系 - 中性基调 */
+  --neutral-dark: #64748b;
+  --neutral-medium: #94a3b8;
+  --neutral-light: #cbd5e1;
+  --neutral-lighter: #e2e8f0;
+  
+  /* 背景色系 */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-overlay: rgba(15, 23, 42, 0.8);
+  
+  /* 功能色彩 */
+  --accent-warm: #fbbf24;     /* 温暖强调 */
+  --accent-healing: #10b981;  /* 治愈绿 */
+  --accent-empathy: #8b5cf6;  /* 共情紫 */
+  --accent-alert: #f97316;    /* 警示橙 */
+  --accent-calm: #3b82f6;     /* 平静蓝 */
+}
+
+/* ==================== 渐变系统 ==================== */
+
+/* 主要渐变 - 镜面效果 */
+.gradient-mirror {
+  background: radial-gradient(120% 120% at 50% 20%, 
+    rgba(139, 92, 246, 0.1) 0%, 
+    rgba(59, 130, 246, 0.05) 48%, 
+    rgba(248, 250, 252, 1) 100%);
+}
+
+/* 深邃渐变 - 内省氛围 */
+.gradient-deep {
+  background: linear-gradient(135deg, 
+    var(--primary-deep) 0%, 
+    var(--calm-dark) 100%);
+}
+
+/* 平静渐变 - 舒缓背景 */
+.gradient-calm {
+  background: linear-gradient(180deg, 
+    var(--bg-primary) 0%, 
+    var(--bg-secondary) 100%);
+}
+
+/* 卡片渐变 - 层次感 */
+.gradient-card {
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(248, 250, 252, 0.8) 100%);
+}
+
+/* 按钮渐变 */
+.gradient-btn-primary {
+  background: linear-gradient(135deg, 
+    var(--primary-medium) 0%, 
+    var(--primary-light) 100%);
+}
+
+.gradient-btn-calm {
+  background: linear-gradient(135deg, 
+    var(--accent-calm) 0%, 
+    #60a5fa 100%);
+}
+
+/* ==================== 阴影系统 ==================== */
+
+/* 轻微阴影 - 卡片悬浮 */
+.shadow-soft {
+  box-shadow: 0 4rpx 12rpx rgba(15, 23, 42, 0.04),
+              0 2rpx 6rpx rgba(15, 23, 42, 0.02);
+}
+
+/* 中等阴影 - 重要元素 */
+.shadow-medium {
+  box-shadow: 0 8rpx 24rpx rgba(15, 23, 42, 0.06),
+              0 4rpx 12rpx rgba(15, 23, 42, 0.04);
+}
+
+/* 深度阴影 - 模态框 */
+.shadow-deep {
+  box-shadow: 0 16rpx 48rpx rgba(15, 23, 42, 0.12),
+              0 8rpx 24rpx rgba(15, 23, 42, 0.08);
+}
+
+/* 内阴影 - 镜面效果 */
+.shadow-inset {
+  box-shadow: inset 0 2rpx 8rpx rgba(139, 92, 246, 0.1),
+              inset 0 1rpx 4rpx rgba(59, 130, 246, 0.05);
+}
+
+/* 发光效果 - 交互反馈 */
+.shadow-glow {
+  box-shadow: 0 0 0 4rpx rgba(139, 92, 246, 0.1),
+              0 8rpx 24rpx rgba(139, 92, 246, 0.15);
+}
+
+/* ==================== 字体系统 ==================== */
+
+.text-title-large {
+  font-size: 48rpx;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--calm-dark);
+}
+
+.text-title-medium {
+  font-size: 36rpx;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--calm-medium);
+}
+
+.text-title-small {
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--calm-light);
+}
+
+.text-body-large {
+  font-size: 28rpx;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--calm-light);
+}
+
+.text-body-medium {
+  font-size: 26rpx;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--neutral-dark);
+}
+
+.text-body-small {
+  font-size: 24rpx;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--neutral-medium);
+}
+
+.text-caption {
+  font-size: 22rpx;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--neutral-medium);
+}
+
+/* ==================== 组件样式 ==================== */
+
+/* 统一按钮样式 */
+.btn-base {
+  border-radius: 24rpx;
+  padding: 18rpx 32rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--gradient-btn-primary);
+  color: white;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary:active {
+  transform: translateY(2rpx);
+  box-shadow: var(--shadow-medium);
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--calm-medium);
+  border: 2rpx solid var(--neutral-lighter);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--neutral-dark);
+  border: 2rpx solid var(--neutral-light);
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 统一卡片样式 */
+.card-base {
+  background: var(--bg-card);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  border: 2rpx solid var(--neutral-lighter);
+  box-shadow: var(--shadow-soft);
+}
+
+.card-elevated {
+  box-shadow: var(--shadow-medium);
+}
+
+.card-interactive {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  transform: translateY(-2rpx);
+  box-shadow: var(--shadow-medium);
+}
+
+/* 输入框样式 */
+.input-base {
+  background: var(--bg-card);
+  border: 2rpx solid var(--neutral-lighter);
+  border-radius: 16rpx;
+  padding: 16rpx 20rpx;
+  font-size: 28rpx;
+  color: var(--calm-medium);
+  transition: border-color 0.2s ease;
+}
+
+.input-base:focus {
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-glow);
+}
+
+/* 标签样式 */
+.chip-base {
+  display: inline-block;
+  padding: 8rpx 16rpx;
+  border-radius: 9999rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  border: 2rpx solid;
+}
+
+.chip-primary {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: var(--primary-lighter);
+  color: var(--primary-medium);
+}
+
+.chip-neutral {
+  background: var(--bg-secondary);
+  border-color: var(--neutral-light);
+  color: var(--neutral-dark);
+}
+
+/* ==================== 动画系统 ==================== */
+
+/* 淡入动画 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 缩放动画 */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 呼吸动画 - 用于录音状态 */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+/* 波纹动画 - 用于语音可视化 */
+@keyframes ripple {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+/* 打字动画 - 用于AI回复 */
+@keyframes typing {
+  0%, 80%, 100% { opacity: 0.2; }
+  40% { opacity: 1; }
+}
+
+/* 浮动动画 - 用于提示元素 */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6rpx); }
+}
+
+/* ==================== 响应式断点 ==================== */
+
+/* 小屏幕适配 */
+@media (max-width: 750rpx) {
+  .btn-base {
+    padding: 16rpx 28rpx;
+    font-size: 26rpx;
+  }
+  
+  .card-base {
+    padding: 20rpx;
+    border-radius: 16rpx;
+  }
+}
+
+/* ==================== 工具类 ==================== */
+
+/* 间距 */
+.mt-xs { margin-top: 8rpx; }
+.mt-sm { margin-top: 12rpx; }
+.mt-md { margin-top: 16rpx; }
+.mt-lg { margin-top: 24rpx; }
+.mt-xl { margin-top: 32rpx; }
+
+.mb-xs { margin-bottom: 8rpx; }
+.mb-sm { margin-bottom: 12rpx; }
+.mb-md { margin-bottom: 16rpx; }
+.mb-lg { margin-bottom: 24rpx; }
+.mb-xl { margin-bottom: 32rpx; }
+
+.p-xs { padding: 8rpx; }
+.p-sm { padding: 12rpx; }
+.p-md { padding: 16rpx; }
+.p-lg { padding: 24rpx; }
+.p-xl { padding: 32rpx; }
+
+/* 布局 */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-xs { gap: 8rpx; }
+.gap-sm { gap: 12rpx; }
+.gap-md { gap: 16rpx; }
+.gap-lg { gap: 24rpx; }
+
+/* 圆角 */
+.rounded-sm { border-radius: 8rpx; }
+.rounded-md { border-radius: 12rpx; }
+.rounded-lg { border-radius: 16rpx; }
+.rounded-xl { border-radius: 24rpx; }
+.rounded-full { border-radius: 9999rpx; }
+
+/* 透明度 */
+.opacity-50 { opacity: 0.5; }
+.opacity-70 { opacity: 0.7; }
+.opacity-80 { opacity: 0.8; }
+.opacity-90 { opacity: 0.9; }

@@ -44,6 +44,10 @@
         "selectedIconPath": "assets/icons/future.png"
       }
     ]
+  },
+  "permission": {
+    "scope.record": {
+      "desc": "用于语音输入和录音功能"
+    }
   }
-  
 }

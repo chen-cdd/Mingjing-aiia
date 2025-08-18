@@ -1,144 +1,365 @@
+/* 文本页面样式 - 马卡龙蓝色主题 */
 .page {
-  padding: 30rpx;
-  background-color: #f8f8f8;
+  padding: 20rpx;
+  background: linear-gradient(135deg, #e6f7ff 0%, #d0f0fd 100%);
   min-height: 100vh;
   box-sizing: border-box;
 }
 
 .section-title {
-  font-size: 36rpx;
-  font-weight: 600;
-  margin-bottom: 30rpx;
-  color: #333;
+  font-size: 40rpx;
+  font-weight: 700;
+  margin-bottom: 32rpx;
+  color: #5a8dee;
+  text-align: center;
+  position: relative;
+  padding-bottom: 16rpx;
 }
 
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 4rpx;
+  background: linear-gradient(90deg, #7ec8e3, #a2d5f2);
+  border-radius: 2rpx;
+}
+
+/* 文本输入区域 */
 .textarea {
   width: 100%;
-  min-height: 300rpx;
-  background: #fff;
-  border-radius: 12rpx;
-  padding: 20rpx;
-  font-size: 28rpx;
+  min-height: 400rpx;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  font-size: 30rpx;
   line-height: 1.6;
   box-sizing: border-box;
-  margin-bottom: 30rpx;
+  margin-bottom: 32rpx;
+  border: 2rpx solid rgba(164, 219, 245, 0.5);
+  box-shadow: 0 8rpx 32rpx rgba(126, 200, 227, 0.15);
+  transition: all 0.3s ease;
+  color: #4a6572;
 }
 
+.textarea:focus {
+  border-color: #7ec8e3;
+  box-shadow: 0 0 0 8rpx rgba(126, 200, 227, 0.2), 0 12rpx 40rpx rgba(126, 200, 227, 0.2);
+  transform: translateY(-2rpx);
+}
+
+/* 按钮行 */
 .btn-row {
   display: flex;
   justify-content: space-between;
-  margin-top: 40rpx;
+  gap: 16rpx;
+  margin-top: 32rpx;
 }
 
 .btn-primary {
-  background-color: #4a90e2;
-  color: white;
-  padding: 16rpx 40rpx;
-  border-radius: 8rpx;
+  background: linear-gradient(135deg, #7ec8e3 0%, #5dade2 100%) !important;
+  color: white !important;
+  padding: 20rpx 40rpx;
+  border-radius: 24rpx !important;
   font-size: 28rpx;
+  font-weight: 600;
   text-align: center;
   flex: 1;
-  margin-left: 20rpx;
+  box-shadow: 0 6rpx 20rpx rgba(126, 200, 227, 0.4);
+  border: none !important;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:active {
+  transform: translateY(2rpx) !important;
+  box-shadow: 0 4rpx 16rpx rgba(126, 200, 227, 0.5) !important;
 }
 
 .btn-ghost {
-  background-color: transparent;
-  color: #666;
-  padding: 16rpx 40rpx;
-  border-radius: 8rpx;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10rpx);
+  color: #5dade2 !important;
+  padding: 20rpx 40rpx;
+  border-radius: 24rpx !important;
   font-size: 28rpx;
+  font-weight: 600;
   text-align: center;
-  border: 1rpx solid #ddd;
+  border: 2rpx solid rgba(93, 173, 226, 0.3) !important;
   flex: 1;
-  margin-right: 20rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 16rpx rgba(126, 200, 227, 0.1);
 }
 
+.btn-ghost:active {
+  background: #5dade2 !important;
+  color: white !important;
+  transform: translateY(2rpx);
+}
+
+/* 记录元信息 */
 .record-meta {
-  margin-bottom: 20rpx;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  border: 1rpx solid rgba(164, 219, 245, 0.3);
+  box-shadow: 0 4rpx 16rpx rgba(126, 200, 227, 0.1);
 }
 
 .record-time {
-  font-size: 24rpx;
-  color: #999;
-  margin-bottom: 10rpx;
+  font-size: 26rpx;
+  color: #7ec8e3;
+  margin-bottom: 16rpx;
   display: block;
+  font-weight: 500;
 }
 
 .record-topics {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 16rpx;
+  gap: 12rpx;
+  margin-bottom: 0;
 }
 
 .topic {
+  background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
+  color: #0288d1;
+  padding: 8rpx 20rpx;
+  border-radius: 28rpx;
   font-size: 24rpx;
-  color: #666;
-  background-color: #f0f0f0;
-  padding: 4rpx 12rpx;
-  border-radius: 20rpx;
-  margin-right: 12rpx;
-  margin-bottom: 8rpx;
+  font-weight: 500;
+  border: 2rpx solid rgba(2, 136, 209, 0.15);
+  box-shadow: 0 2rpx 8rpx rgba(2, 136, 209, 0.1);
 }
 
+/* 记录内容 */
 .record-content {
-  background: #fff;
-  border-radius: 12rpx;
-  padding: 20rpx;
-  font-size: 28rpx;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  font-size: 30rpx;
   line-height: 1.6;
-  margin-bottom: 30rpx;
-  color: #333;
+  margin-bottom: 24rpx;
+  color: #4a6572;
+  border-left: 6rpx solid #7ec8e3;
+  box-shadow: 0 8rpx 32rpx rgba(126, 200, 227, 0.15);
+  transition: all 0.3s ease;
 }
 
+.record-content:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 12rpx 40rpx rgba(126, 200, 227, 0.2);
+}
+
+/* 情绪分析容器 */
 .emotions-container {
-  background: #fff;
-  border-radius: 12rpx;
-  padding: 20rpx;
-  margin-bottom: 30rpx;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10rpx);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  border: 1rpx solid rgba(164, 219, 245, 0.3);
+  box-shadow: 0 8rpx 32rpx rgba(126, 200, 227, 0.15);
+  transition: all 0.3s ease;
+}
+
+.emotions-container:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 12rpx 40rpx rgba(126, 200, 227, 0.2);
 }
 
 .emotions-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  margin-bottom: 16rpx;
-  color: #333;
+  font-size: 32rpx;
+  font-weight: 700;
+  margin-bottom: 24rpx;
+  color: #5dade2;
   display: block;
+  position: relative;
+  padding-left: 16rpx;
+}
+
+.emotions-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 28rpx;
+  background: linear-gradient(135deg, #7ec8e3, #5dade2);
+  border-radius: 3rpx;
 }
 
 .emotions-list {
-  margin-top: 10rpx;
+  margin-top: 16rpx;
 }
 
 .emotion-item {
   display: flex;
   align-items: center;
-  margin-bottom: 12rpx;
+  margin-bottom: 20rpx;
+  padding: 16rpx;
+  background: linear-gradient(135deg, #f8fbff 0%, #e8f4fd 100%);
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(126, 200, 227, 0.1);
+  transition: all 0.3s ease;
+}
+
+.emotion-item:hover {
+  transform: translateX(4rpx);
+  box-shadow: 0 4rpx 16rpx rgba(126, 200, 227, 0.2);
 }
 
 .emotion-name {
-  width: 80rpx;
-  font-size: 24rpx;
-  color: #666;
+  width: 100rpx;
+  font-size: 26rpx;
+  color: #0288d1;
+  font-weight: 600;
 }
 
 .emotion-bar {
   flex: 1;
-  height: 16rpx;
-  background-color: #f0f0f0;
-  border-radius: 8rpx;
+  height: 20rpx;
+  background: linear-gradient(135deg, #e1f5fe, #b3e5fc);
+  border-radius: 10rpx;
   overflow: hidden;
-  margin: 0 16rpx;
+  margin: 0 20rpx;
+  box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.05);
 }
 
 .emotion-fill {
   height: 100%;
-  background-color: #4a90e2;
-  border-radius: 8rpx;
+  background: linear-gradient(135deg, #7ec8e3 0%, #5dade2 100%);
+  border-radius: 10rpx;
+  box-shadow: 0 2rpx 8rpx rgba(93, 173, 226, 0.3);
+  transition: all 0.3s ease;
 }
 
 .emotion-score {
-  font-size: 24rpx;
-  color: #666;
-  width: 60rpx;
+  font-size: 26rpx;
+  color: #0288d1;
+  width: 80rpx;
   text-align: right;
+  font-weight: 600;
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.record-meta,
+.record-content,
+.emotions-container {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.record-content {
+  animation-delay: 0.1s;
+}
+
+.emotions-container {
+  animation-delay: 0.2s;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .page {
+    padding: 16rpx;
+  }
+  
+  .section-title {
+    font-size: 36rpx;
+  }
+  
+  .textarea {
+    min-height: 300rpx;
+    padding: 24rpx;
+    font-size: 28rpx;
+  }
+  
+  .btn-row {
+    flex-direction: column;
+    gap: 12rpx;
+  }
+  
+  .record-content,
+  .emotions-container {
+    padding: 24rpx;
+  }
+  
+  .emotion-name {
+    width: 80rpx;
+    font-size: 24rpx;
+  }
+  
+  .emotion-score {
+    width: 60rpx;
+    font-size: 24rpx;
+  }
+}
+
+/* 特殊效果 */
+.textarea::placeholder {
+  color: #a2d5f2;
+  opacity: 0.8;
+}
+
+/* 焦点状态增强 */
+.btn-primary:focus,
+.btn-ghost:focus {
+  outline: none;
+  box-shadow: 0 0 0 6rpx rgba(126, 200, 227, 0.3);
+}
+
+/* 点缀元素 - 马卡龙色系点缀 */
+.topic:nth-child(2n) {
+  background: linear-gradient(135deg, #ffd6e7, #ffc2dc);
+  color: #e91e63;
+  border-color: rgba(233, 30, 99, 0.15);
+}
+
+.topic:nth-child(3n) {
+  background: linear-gradient(135deg, #fff9c4, #fff59d);
+  color: #f57f17;
+  border-color: rgba(245, 127, 23, 0.15);
+}
+
+.record-meta::after {
+  content: "";
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  width: 30rpx;
+  height: 30rpx;
+  background: #ffd6e7;
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.4;
+}
+
+.emotions-container::before {
+  content: "";
+  position: absolute;
+  bottom: -15rpx;
+  left: -15rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background: #fff9c4;
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.4;
 }

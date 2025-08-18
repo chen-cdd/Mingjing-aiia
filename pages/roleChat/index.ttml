@@ -19,7 +19,7 @@
       <block tt:for="{{msgs}}" tt:key="id">
         <view class="message-item {{item.role}}" id="msg-{{index}}">
           <view class="message-avatar">
-            <text class="avatar-text" tt:if="{{item.role === 'ai'}}">{{personName.charAt(0)}}</text>
+            <text class="avatar-text" tt:if="{{item.role === 'ai'}}">{{avatarInitial}}</text>
             <text class="avatar-text" tt:else>我</text>
           </view>
           <view class="message-content">
@@ -33,7 +33,7 @@
       <!-- 发送中提示 -->
       <view class="message-item ai" tt:if="{{sending}}">
         <view class="message-avatar">
-          <text class="avatar-text">{{personName.charAt(0)}}</text>
+          <text class="avatar-text">{{avatarInitial}}</text>
         </view>
         <view class="message-content">
           <view class="message-bubble typing">

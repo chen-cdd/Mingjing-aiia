@@ -1,4 +1,136 @@
-/* e:\明镜\langlangshan\明镜明镜\pages\today\index.ttss */
+/* 今日页面样式 - 马卡龙色系轻盈主题 */
+.page {
+  padding: 20rpx;
+  background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 50%, #c5cae9 100%);
+  min-height: 100vh;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10rpx);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 32rpx rgba(179, 229, 252, 0.3);
+  border: 1rpx solid rgba(179, 229, 252, 0.4);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.card:hover {
+  transform: translateY(-4rpx);
+  box-shadow: 0 12rpx 40rpx rgba(179, 229, 252, 0.4);
+}
+
+.card-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #81d4fa;
+  margin-bottom: 24rpx;
+  position: relative;
+  padding-left: 16rpx;
+}
+
+.card-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 32rpx;
+  background: linear-gradient(135deg, #80deea, #4fc3f7);
+  border-radius: 3rpx;
+}
+
+.card-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.card-title-row .card-title {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+/* 按钮样式 - 马卡龙色系 */
+.primary {
+  background: linear-gradient(135deg, #81d4fa 0%, #4fc3f7 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 20rpx !important;
+  font-weight: 600 !important;
+  font-size: 24rpx !important;
+  padding: 12rpx 24rpx !important;
+  box-shadow: 0 4rpx 12rpx rgba(129, 212, 250, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.primary:active {
+  transform: translateY(2rpx) !important;
+  box-shadow: 0 2rpx 8rpx rgba(129, 212, 250, 0.5) !important;
+}
+
+.danger {
+  background: linear-gradient(135deg, #f8bbd0 0%, #f48fb1 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 16rpx !important;
+  font-weight: 500 !important;
+  font-size: 22rpx !important;
+  padding: 8rpx 16rpx !important;
+  box-shadow: 0 2rpx 8rpx rgba(244, 143, 177, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.danger:active {
+  transform: translateY(1rpx) !important;
+  box-shadow: 0 1rpx 4rpx rgba(244, 143, 177, 0.4) !important;
+}
+
+/* 事项列表样式 - 马卡龙色系 */
+.action-list {
+  margin-top: 16rpx;
+}
+
+.action-item {
+  background: linear-gradient(135deg, #f5fdff 0%, #f0f9ff 100%);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  border-left: 6rpx solid #81d4fa; /* 主蓝色 */
+  box-shadow: 0 4rpx 16rpx rgba(129, 212, 250, 0.15);
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* 为不同事项添加马卡龙色点缀 */
+.action-item:nth-child(4n+1) { border-left-color: #81d4fa; } /* 蓝色 */
+.action-item:nth-child(4n+2) { border-left-color: #f8bbd0; } /* 粉色 */
+.action-item:nth-child(4n+3) { border-left-color: #c5e1a5; } /* 薄荷绿 */
+.action-item:nth-child(4n+4) { border-left-color: #b39ddb; } /* 淡紫色 */
+
+.action-item:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 8rpx 24rpx rgba(129, 212, 250, 0.25);
+}
+
+.action-item:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.action-item:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.action-item:nth-child(4) {
+  animation-delay: 0.3s;
+}
 
 .action-main {
   display: flex;
@@ -7,30 +139,33 @@
 }
 
 .action-status {
-  margin-right: 12px;
-  padding: 4px;
+  margin-right: 24rpx;
+  padding: 8rpx;
 }
 
 .checkbox {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #ddd;
-  border-radius: 4px;
+  width: 40rpx;
+  height: 40rpx;
+  border: 4rpx solid #b3e5fc;
+  border-radius: 12rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
-  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+  box-shadow: 0 2rpx 8rpx rgba(179, 229, 252, 0.2);
 }
 
 .checkbox.checked {
-  background-color: #007aff;
-  border-color: #007aff;
+  background: linear-gradient(135deg, #81d4fa, #4fc3f7);
+  border-color: #4fc3f7;
+  box-shadow: 0 4rpx 12rpx rgba(79, 195, 247, 0.4);
+  transform: scale(1.1);
 }
 
 .checkmark {
-  color: #fff;
-  font-size: 14px;
+  color: white;
+  font-size: 24rpx;
   font-weight: bold;
 }
 
@@ -38,14 +173,175 @@
   flex: 1;
 }
 
+.action-text {
+  font-size: 28rpx;
+  color: #546e7a;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 8rpx;
+  transition: all 0.3s ease;
+}
+
 .action-text.completed {
   text-decoration: line-through;
-  color: #999;
-  opacity: 0.6;
+  color: #90a4ae;
+  opacity: 0.7;
 }
 
 .action-time {
-  font-size: 12px;
-  color: #666;
-  margin-top: 4px;
+  font-size: 22rpx;
+  color: #64b5f6;
+  font-weight: 500;
+}
+
+.action-ops {
+  display: flex;
+  gap: 12rpx;
+  align-items: center;
+}
+
+.action-ops button {
+  background: rgba(255, 255, 255, 0.8) !important;
+  color: #4fc3f7 !important;
+  border: 2rpx solid rgba(79, 195, 247, 0.3) !important;
+  border-radius: 16rpx !important;
+  font-size: 22rpx !important;
+  font-weight: 500 !important;
+  padding: 8rpx 16rpx !important;
+  transition: all 0.3s ease !important;
+}
+
+.action-ops button:active {
+  background: #4fc3f7 !important;
+  color: white !important;
+  transform: translateY(1rpx);
+}
+
+/* 技能练习网格 - 马卡龙色系 */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.skill {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 251, 255, 0.95) 100%);
+  backdrop-filter: blur(10rpx);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  text-align: center;
+  border: 2rpx solid rgba(129, 212, 250, 0.25);
+  box-shadow: 0 4rpx 16rpx rgba(129, 212, 250, 0.15);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.skill::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4rpx;
+  background: linear-gradient(90deg, #81d4fa, #4fc3f7);
+}
+
+/* 为不同技能添加马卡龙色点缀 */
+.skill:nth-child(4n+1)::before { background: linear-gradient(90deg, #81d4fa, #4fc3f7); } /* 蓝色 */
+.skill:nth-child(4n+2)::before { background: linear-gradient(90deg, #f8bbd0, #f48fb1); } /* 粉色 */
+.skill:nth-child(4n+3)::before { background: linear-gradient(90deg, #c5e1a5, #aed581); } /* 薄荷绿 */
+.skill:nth-child(4n+4)::before { background: linear-gradient(90deg, #b39ddb, #9575cd); } /* 淡紫色 */
+
+.skill:active {
+  transform: translateY(-4rpx) scale(0.98);
+  box-shadow: 0 8rpx 24rpx rgba(129, 212, 250, 0.25);
+}
+
+.skill-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #4fc3f7;
+  margin-bottom: 8rpx;
+}
+
+.skill-meta {
+  font-size: 22rpx;
+  color: #81d4fa;
+  font-weight: 500;
+}
+
+/* 响应式设计更新 */
+@media (max-width: 750rpx) {
+  .page {
+    padding: 16rpx;
+  }
+  
+  .card {
+    padding: 24rpx;
+    margin-bottom: 16rpx;
+  }
+  
+  .card-title {
+    font-size: 32rpx;
+  }
+  
+  .card-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16rpx;
+  }
+  
+  .action-item {
+    padding: 20rpx;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16rpx;
+  }
+  
+  .action-main {
+    width: 100%;
+  }
+  
+  .action-ops {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .grid {
+    gap: 12rpx;
+  }
+  
+  .skill {
+    padding: 20rpx;
+  }
+}
+
+/* 特殊效果 */
+.action-item:hover .checkbox {
+  border-color: #81d4fa;
+  box-shadow: 0 0 0 4rpx rgba(129, 212, 250, 0.3);
+}
+
+.skill:hover {
+  border-color: #81d4fa;
+  box-shadow: 0 8rpx 32rpx rgba(129, 212, 250, 0.25);
+}
+
+.skill:hover .skill-title {
+  color: #29b6f6;
+}
+
+/* 动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -37,7 +37,7 @@
      width: 80%;
      text-align: center;
      pointer-events: none;
-     height: 330rpx; /* 显示5行文字的高度 */
+     height: 330rpx; 
      overflow: hidden;
      mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 10%, rgba(0,0,0,0.8) 25%, #000 35%, #000 65%, rgba(0,0,0,0.8) 75%, rgba(0,0,0,0.3) 90%, transparent 100%);
      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 10%, rgba(0,0,0,0.8) 25%, #000 35%, #000 65%, rgba(0,0,0,0.8) 75%, rgba(0,0,0,0.3) 90%, transparent 100%);
@@ -187,4 +187,52 @@
   border: 2rpx solid #1f2937;
   box-shadow: 0 10rpx 20rpx rgba(0,0,0,.08);
   font-weight: 700;
+}
+
+/* 优化镜面反射装饰 */
+.reflection-1{
+  animation: float 3s ease-in-out infinite;
+  background: linear-gradient(145deg, rgba(255,255,255,0.8), rgba(219,234,254,0.6));
+}
+
+.reflection-2{
+  animation: float 3.2s ease-in-out infinite;
+  background: linear-gradient(145deg, rgba(255,255,255,0.7), rgba(224,242,254,0.5));
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20rpx) scale(0.95); }
+}
+
+/* 增强动态文字效果 */
+.text-line {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.text-line.active {
+  text-shadow: 0 0 20rpx rgba(74,144,226,0.4);
+  background: linear-gradient(to right, #4A90E2, #6AB0FE);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 优化水波效果 */
+.ripple {
+  border-width: 6rpx;
+  background: radial-gradient(circle, rgba(59,130,246,0.25), transparent 70%);
+  animation-duration: 1.2s;
+}
+
+/* 美化底部按钮 */
+.enter-inner-fixed {
+  background: linear-gradient(145deg, #1e40af, #2563eb);
+  box-shadow: 0 12rpx 32rpx rgba(37,99,235,0.3);
+  transition: all 0.3s ease;
+}
+
+.enter-inner-fixed:active {
+  transform: translateX(-50%) scale(0.96);
+  box-shadow: 0 6rpx 24rpx rgba(37,99,235,0.2);
 }

@@ -5,10 +5,21 @@ const { transcribe } = require('../../utils/asr.js'); // 相对路径引入（�
 let recorder = null;
 let waveTimer = null;
 
-// 三档参数：最小兜底 → AAC@16k → MP3@16k
 const OPTS_MIN = { duration: 600000 }; // 兜底：让端侧选择编码
-const OPTS_AAC = { format: 'aac', sampleRate: 16000, numberOfChannels: 1, duration: 600000 };
-const OPTS_MP3 = { format: 'mp3', sampleRate: 16000, numberOfChannels: 1, duration: 600000 };
+const OPTS_AAC = { 
+  format: 'aac', 
+  sampleRate: 16000, 
+  encodeBitRate: 48000, // 16kHz 对应 48kbps
+  numberOfChannels: 1, 
+  duration: 600000 
+};
+const OPTS_MP3 = { 
+  format: 'mp3', 
+  sampleRate: 16000, 
+  encodeBitRate: 48000, // 16kHz 对应 48kbps
+  numberOfChannels: 1, 
+  duration: 600000 
+};
 
 Page({
   data:{
@@ -28,9 +39,11 @@ Page({
 
     recorder = tt.getRecorderManager();
 
-    // 统一错误兜底
     recorder.onError = (err)=>{
       this._log('recorder.onError: ' + JSON.stringify(err));
+      // 记录最近一次错误时间与内容，供 _tryStartChain 判定启动是否失败
+      this._lastStartErrorAt = Date.now();
+      this._lastStartError = err;
       tt.showToast({ title:'录音异常', icon:'none' });
       this.setData({ status:'paused' });
       this.stopWave();
@@ -81,19 +94,34 @@ Page({
     else if (s === 'recording') this._pauseSegment();
   },
 
-  // —— 开始一段录音（不再使用 tt.authorize；由 start 触发授权） —— //
+  // —— 开始一段录音（检查权限后启动） —— //
   async _startSegment(){
     if (this._starting) return;              // 防抖
     this._starting = true;
 
     try{
-      // 曾拒绝过权限 → 直接引导去设置
-      if (this._recordDenied) {
-        this._log('曾拒绝录音权限 → 引导去设置');
+      // 先检查当前权限状态
+      const authStatus = await new Promise(resolve => {
+        tt.getSetting({
+          success: (res) => {
+            const recordAllowed = res.authSetting?.['scope.record'];
+            this._log('当前录音权限状态: ' + recordAllowed);
+            resolve(recordAllowed);
+          },
+          fail: () => {
+            this._log('获取权限状态失败');
+            resolve(undefined);
+          }
+        });
+      });
+
+      // 权限被明确拒绝 → 引导去设置
+      if (authStatus === false || this._recordDenied) {
+        this._log('录音权限被拒绝 → 引导去设置');
         const r = await new Promise(resolve=>{
           tt.showModal({
             title: '需要麦克风权限',
-            content: '请在设置里开启“录音”权限后再试。',
+            content: '请在设置里开启"录音"权限后再试。',
             confirmText: '去设置', cancelText: '稍后',
             success: resolve
           });
@@ -101,6 +129,9 @@ Page({
         if (r?.confirm) tt.openSetting();
         return;
       }
+
+      // 权限已授权或未请求过，尝试启动录音
+      this._log('准备开始录音，权限状态: ' + (authStatus === true ? '已授权' : '未请求过，将由 start() 触发授权'));
 
       // 依次尝试三组参数（由 API 自行触发系统授权弹窗）
       const ok = await this._tryStartChain([OPTS_MIN, OPTS_AAC, OPTS_MP3]);
@@ -120,7 +151,12 @@ Page({
                 success: r => { if (r?.confirm) tt.openSetting(); }
               });
             } else {
-              tt.showToast({ title:'无法开始录音', icon:'none' });
+              // 检查是否在开发者工具中
+              const isDevTool = tt.getSystemInfoSync().platform === 'devtools';
+              const message = isDevTool 
+                ? '无法开始录音。如在开发者工具中调试，请先在系统设置中为抖音开发者工具开启麦克风权限。'
+                : '无法开始录音，请检查设备麦克风权限。';
+              tt.showToast({ title: message, icon: 'none', duration: 3000 });
             }
           },
           fail: ()=> tt.showToast({ title:'无法开始录音', icon:'none' })
@@ -147,13 +183,19 @@ Page({
   _tryStartChain(optsList){
     const tryOne = (opts)=> new Promise((resolve)=>{
       this._log('try start: ' + JSON.stringify(opts));
-      let started = false;
       try{
-        // 某些端会触发 onStart
-        recorder.onStart && recorder.onStart(()=> { started = true; this._log('onStart ok'); resolve(true); });
+        const beforeErrAt = this._lastStartErrorAt || 0;
         recorder.start(opts);
-        // 若端不触发 onStart，延时兜底判定
-        setTimeout(()=> { if (!started) resolve(true); }, 140);
+        // 等待一小段时间，若 onError 在此期间触发，则判定失败
+        setTimeout(()=> {
+          const failRecent = (this._lastStartErrorAt || 0) > beforeErrAt;
+          if (failRecent) {
+            this._log('start immediate fail: ' + JSON.stringify(this._lastStartError || {}));
+            resolve(false);
+          } else {
+            resolve(true);
+          }
+        }, 260);
       }catch(e){
         this._log('start error: ' + (e && e.message || e));
         resolve(false);
@@ -238,10 +280,61 @@ Page({
     this.setData({ transcript: v, canFinish: !!v.trim() });
   },
 
+  // 测试百度API连接
+  async testBaiduAPI(){
+    this._log('开始测试百度API连接...');
+    try {
+      const { getBaiduAccessToken } = require('../../utils/asr.js');
+      const token = await getBaiduAccessToken();
+      this._log('✅ 百度API连接成功！Token: ' + token.substring(0, 20) + '...');
+      tt.showToast({ title: 'API连接成功', icon: 'success' });
+    } catch (error) {
+      this._log('❌ 百度API连接失败: ' + error.message);
+      tt.showToast({ title: 'API连接失败', icon: 'none' });
+    }
+  },
+
+  // 请求录音权限
+  async requestRecordPermission(){
+    this._log('手动检查/引导录音权限...');
+    tt.getSetting({
+      success: (s) => {
+        const has = s?.authSetting?.['scope.record'];
+        this._log('当前权限状态 scope.record=' + has);
+        if (has === true) {
+          this._recordDenied = false;
+          tt.showToast({ title: '已获得录音权限', icon: 'success' });
+        } else if (has === false) {
+          this._recordDenied = true;
+          tt.showModal({
+            title: '权限被拒绝',
+            content: '请在抖音设置中手动开启麦克风权限',
+            confirmText: '去设置', cancelText: '稍后',
+            success: (modalRes) => {
+              if (modalRes.confirm) {
+                tt.openSetting();
+              }
+            }
+          });
+        } else {
+          // 未请求过授权：根据平台规范，应由相关 API 在用户触发时弹窗授权
+          tt.showModal({
+            title: '提示',
+            content: '请点击“开始录音”按钮，系统会在需要时弹出麦克风授权。',
+            showCancel: false,
+          });
+        }
+      },
+      fail: () => {
+        tt.showToast({ title: '无法获取权限状态', icon: 'none' });
+      }
+    });
+  },
+
   // —— 页面内调试日志 —— //
   _log(s){
     const line = `[${new Date().toLocaleTimeString()}] ${s}`;
-    console.log(line);
+    console.log('[voice]', s);
     let prev = this.data.debug || '';
     prev = (line + '\n' + prev);
     this.setData({ debug: prev.slice(0, 1200) });

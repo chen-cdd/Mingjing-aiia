@@ -1,232 +1,169 @@
-const app = getApp();
-let recorder = null;
-let waveTimer = null;
+// 引入百度语音识别配置
+const BAIDU_CONFIG = require('../config/baidu-asr.js');
 
-const OPTS_AAC = { format: 'aac', sampleRate: 16000, numberOfChannels: 1, duration: 600000 };
-const OPTS_MP3 = { format: 'mp3', sampleRate: 16000, numberOfChannels: 1, duration: 600000 };
-const OPTS_MIN = { duration: 600000 }; // 兜底：交给端侧选择编码
-
-Page({
-  data:{
-    status: 'idle',                 // idle | recording | paused | processing
-    transcript: '',
-    levelBars: Array.from({length:32}).map(()=> 10),
-    canFinish: false,
-    debug: ''                       // 调试信息展示
-  },
-
-  onLoad(){
-    if (!tt.getRecorderManager) {
-      this._log('当前端不支持 getRecorderManager（请升级客户端/IDE）');
-      tt.showToast({ title:'端不支持录音', icon:'none' });
-      return;
+// 获取百度语音识别AccessToken
+function getBaiduAccessToken() {
+  return new Promise((resolve, reject) => {
+    console.log('[ASR] 开始获取AccessToken');
+    // 先检查本地存储的token是否有效
+    const cachedToken = tt.getStorageSync('baidu_asr_token');
+    const tokenTime = tt.getStorageSync('baidu_asr_token_time');
+    
+    if (cachedToken && tokenTime) {
+      const now = Date.now();
+      // token有效期30天，提前1天刷新
+      if (now - tokenTime < 29 * 24 * 60 * 60 * 1000) {
+        console.log('[ASR] 使用缓存的token');
+        resolve(cachedToken);
+        return;
+      }
     }
-
-    recorder = tt.getRecorderManager();
-
-    // 统一错误兜底
-    recorder.onError = (err)=>{
-      this._log('recorder.onError: ' + JSON.stringify(err));
-      tt.showToast({ title:'录音异常', icon:'none' });
-      this.setData({ status:'paused' });
-      this.stopWave();
-      this._starting = false; // 避免卡住
-    };
-
-    // 每段 stop 后：做转写并把文本追加
-    recorder.onStop = async (res)=>{
-      this._log('onStop file=' + (res && res.tempFilePath));
-      try{
-        this.setData({ status:'processing' });
-        const text = await transcribe(res.tempFilePath);
-        const merged = (this.data.transcript ? (this.data.transcript + '\n') : '') + (text || '');
-        this.setData({ transcript: merged.trim(), canFinish: !!merged.trim() });
-      }catch(e){
-        this._log('transcribe fail: ' + (e && e.message || e));
-        tt.showToast({ title:'转写失败', icon:'none' });
-      }finally{
-        this.stopWave();
-        this.setData({ status:'paused' });
-        if (this._pendingFinish) {
-          this._pendingFinish = false;
-          this._goAnalysis();
+    
+    // 获取新token
+    console.log('[ASR] 请求新token，URL:', BAIDU_CONFIG.tokenUrl);
+    console.log('[ASR] API Key:', BAIDU_CONFIG.apiKey);
+    tt.request({
+      url: BAIDU_CONFIG.tokenUrl,
+      method: 'POST',
+      header: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: {
+        grant_type: 'client_credentials',
+        client_id: BAIDU_CONFIG.apiKey,
+        client_secret: BAIDU_CONFIG.secretKey
+      },
+      success: (res) => {
+        console.log('[ASR] Token请求响应:', res.data);
+        if (res.data && res.data.access_token) {
+          const token = res.data.access_token;
+          tt.setStorageSync('baidu_asr_token', token);
+          tt.setStorageSync('baidu_asr_token_time', Date.now());
+          console.log('[ASR] Token获取成功');
+          resolve(token);
+        } else {
+          console.log('[ASR] Token响应格式错误:', res.data);
+          reject(new Error('获取AccessToken失败'));
         }
-      }
-    };
-
-    // 读取授权状态（不会弹框），便于判断是否曾拒绝
-    tt.getSetting({
-      success: s => {
-        const has = s?.authSetting?.['scope.record'];
-        this._recordDenied = has === false;
-        this._log('getSetting scope.record=' + has);
+      },
+      fail: (err) => {
+        console.log('[ASR] Token请求失败:', err);
+        reject(err);
       }
     });
+  });
+}
 
-    // 尝试默认开始第一段
-    this._startSegment();
-  },
-
-  onUnload(){
-    try{ recorder && recorder.stop(); }catch(e){}
-    this.stopWave();
-  },
-
-  // ===== 录音主按钮 =====
-  toggleRecord(){
-    const s = this.data.status;
-    if (s === 'processing') return; // 转写中禁止点击
-    if (s === 'idle' || s === 'paused') this._startSegment();
-    else if (s === 'recording') this._pauseSegment();
-  },
-
-  // ===== 开始一段录音（带降级重试） =====
-  async _startSegment(){
-    if (this._starting) return;   // 防抖
-    this._starting = true;
-
-    try{
-      // 若曾明确拒绝，先引导去设置
-      if (this._recordDenied) {
-        this._log('曾拒绝麦克风权限 → 引导去设置');
-        const r = await new Promise(resolve=>{
-          tt.showModal({
-            title: '需要麦克风权限',
-            content: '请在设置里开启“录音”权限后再试。',
-            confirmText: '去设置', cancelText: '稍后',
-            success: resolve
+// 语音转文字函数
+function transcribe(audioPath) {
+  return new Promise(async (resolve, reject) => {
+    // 设置30秒超时
+    const timeoutId = setTimeout(() => {
+      console.log('[ASR] 转录超时，30秒未完成');
+      reject(new Error('语音转录超时，请重试'));
+    }, 30000);
+    
+    try {
+      console.log('[ASR] 开始语音转文字，音频路径:', audioPath);
+      // 获取AccessToken
+      const accessToken = await getBaiduAccessToken();
+      console.log('[ASR] AccessToken获取成功');
+      
+      // 读取音频文件并转换为base64
+      const fs = tt.getFileSystemManager();
+      fs.readFile({
+        filePath: audioPath,
+        success: (res) => {
+          console.log('[ASR] 音频文件读取成功，大小:', res.data.byteLength, 'bytes');
+          const base64Audio = tt.arrayBufferToBase64(res.data);
+          const audioSize = res.data.byteLength;
+          console.log('[ASR] Base64转换完成，长度:', base64Audio.length);
+          
+          const requestData = {
+               format: BAIDU_CONFIG.asrOptions.format,
+               rate: BAIDU_CONFIG.asrOptions.rate,
+               channel: BAIDU_CONFIG.asrOptions.channel,
+               dev_pid: BAIDU_CONFIG.asrOptions.dev_pid,
+               cuid: 'douyin_miniapp_' + Date.now(), // 用户唯一标识
+               token: accessToken,
+               speech: base64Audio,
+               len: audioSize
+             };
+          
+          console.log('[ASR] 请求参数:', {
+            format: requestData.format,
+            rate: requestData.rate,
+            channel: requestData.channel,
+            dev_pid: requestData.dev_pid,
+            cuid: requestData.cuid,
+            len: requestData.len,
+            speechLength: requestData.speech.length
           });
-        });
-        if (r?.confirm) tt.openSetting();
-        return;
-      }
-
-      // 先尝试主动授权（若已授权会直接通过，未授权时可能弹系统框）
-      await this._tryAuthorize();
-
-      // 依次尝试 3 种参数，直到成功
-      const ok = await this._tryStartChain([OPTS_AAC, OPTS_MP3, OPTS_MIN]);
-      if (!ok) {
-        this._log('所有参数都 start 失败');
-        tt.showToast({ title:'无法开始录音', icon:'none' });
-        this.setData({ status:'paused' });
-        return;
-      }
-
-      this.setData({ status:'recording' });
-      this.startWave();
-    }catch(e){
-      this._log('start exception: ' + (e && e.message || e));
-      tt.showToast({ title:'无法开始录音', icon:'none' });
-      this.setData({ status:'paused' });
-    }finally{
-      this._starting = false;
-    }
-  },
-
-  // 主动授权（可选）；失败不抛错，仅记录
-  _tryAuthorize(){
-    return new Promise((resolve)=>{
-      if (!tt.authorize) return resolve(); // 老端无此 API
-      tt.authorize({
-        scope: 'scope.record',
-        success: ()=>{ this._log('authorize success'); resolve(); },
-        fail: (e)=> { this._log('authorize fail: ' + (e && e.errMsg)); resolve(); }
+          
+          // 调用百度语音识别API
+          console.log('[ASR] 发送识别请求到:', BAIDU_CONFIG.asrUrl);
+          tt.request({
+            url: BAIDU_CONFIG.asrUrl,
+            method: 'POST',
+            timeout: 25000, // 25秒请求超时
+            header: {
+              'Content-Type': 'application/json'
+            },
+            data: requestData,
+            success: (response) => {
+              clearTimeout(timeoutId);
+              console.log('[ASR] API响应:', response.data);
+              if (response.data && response.data.err_no === 0) {
+                const result = response.data.result;
+                if (result && result.length > 0) {
+                  console.log('[ASR] 识别成功:', result[0]);
+                  resolve(result[0]); // 返回识别结果
+                } else {
+                  console.log('[ASR] 识别结果为空');
+                  reject(new Error('未识别到语音内容'));
+                }
+              } else {
+                const errorMsg = response.data ? response.data.err_msg : '语音识别失败';
+                const errorNo = response.data ? response.data.err_no : 'unknown';
+                console.log('[ASR] 识别失败，错误码:', errorNo, '错误信息:', errorMsg);
+                reject(new Error(`${errorMsg} (错误码: ${errorNo})`));
+              }
+            },
+            fail: (err) => {
+              clearTimeout(timeoutId);
+              console.log('[ASR] 网络请求失败:', err);
+              reject(new Error('网络请求失败: ' + err.errMsg));
+            }
+          });
+        },
+        fail: (err) => {
+          clearTimeout(timeoutId);
+          console.log('[ASR] 音频文件读取失败:', err);
+          reject(new Error('读取音频文件失败: ' + err.errMsg));
+        }
       });
-    });
-  },
-
-  // 依次尝试多个参数 start
-  _tryStartChain(optsList){
-    const tryOne = (opts)=> new Promise((resolve)=>{
-      this._log('try start: ' + JSON.stringify(opts));
-      let started = false;
-      try{
-        // 某些端支持 onStart
-        recorder.onStart && recorder.onStart(()=> { started = true; this._log('onStart ok'); resolve(true); });
-        recorder.start(opts);
-        // 若端不触发 onStart，延时判定
-        setTimeout(()=> { if (!started) resolve(true); }, 120); // 120ms 视为已开始
-      }catch(e){
-        this._log('start error: ' + (e && e.message || e));
-        resolve(false);
-      }
-    });
-
-    return new Promise(async (resolve)=>{
-      for (const opts of optsList) {
-        // 避免上一次触发 onError 影响下一次
-        let ok = await tryOne(opts);
-        if (ok) return resolve(true);
-      }
-      resolve(false);
-    });
-  },
-
-  // 暂停（stop -> onStop -> transcribe）
-  _pauseSegment(){
-    try{
-      this._log('pause -> stop()');
-      recorder.stop();
-      this.setData({ status:'processing' });
-    }catch(e){
-      this._log('stop error: ' + (e && e.message || e));
+    } catch (error) {
+      clearTimeout(timeoutId);
+      console.log('[ASR] transcribe异常:', error);
+      reject(error);
     }
-  },
+  });
+}
 
-  // ===== 波形动画（模拟） =====
-  startWave(){
-    this.stopWave();
-    waveTimer = setInterval(()=>{
-      if (this.data.status !== 'recording') return;
-      const next = this.data.levelBars.map((_,i)=> {
-        const base = 18 + Math.sin(Date.now()/120 + i)*10;
-        const rand = Math.random()*40;
-        return Math.max(8, Math.min(180, base + rand));
-      });
-      this.setData({ levelBars: next });
-    }, 100);
-  },
-  stopWave(){ if (waveTimer){ clearInterval(waveTimer); waveTimer=null; } },
+// 录音管理器配置
+const getRecorderManager = () => {
+  const recorderManager = tt.getRecorderManager();
+  
+  return {
+    manager: recorderManager,
+    options: BAIDU_CONFIG.recordOptions,
+    start: () => recorderManager.start(BAIDU_CONFIG.recordOptions),
+    stop: () => recorderManager.stop()
+  };
+};
 
-  // ===== 完成 / 清空 / 手动编辑 =====
-  async finish(){
-    const hasText = !!this.data.transcript.trim();
-    if (!hasText && this.data.status!=='recording') {
-      tt.showToast({ title:'先说点或写点内容吧', icon:'none' }); return;
-    }
-    if (this.data.status === 'recording') {
-      this._pendingFinish = true;
-      this._pauseSegment();
-    } else if (this.data.status === 'processing') {
-      this._pendingFinish = true;
-    } else {
-      this._goAnalysis();
-    }
-  },
-
-  _goAnalysis(){
-    app.globalData.draft = { text: this.data.transcript.trim() };
-    if (!app.globalData.draft.text) {
-      tt.showToast({ title:'内容为空', icon:'none' }); return;
-    }
-    tt.navigateTo({ url:'/pages/analysis/index' });
-  },
-
-  clearAll(){ this.setData({ transcript:'', canFinish:false }); },
-
-  onInput(e){
-    const v = (e.detail && e.detail.value) || '';
-    this.setData({ transcript: v, canFinish: !!v.trim() });
-  },
-
-  // ===== 简单日志收集到页面 =====
-  _log(s){
-    const line = `[${new Date().toLocaleTimeString()}] ${s}`;
-    console.log(line);
-    let prev = this.data.debug || '';
-    prev = (line + '\n' + prev);
-    // 最多保留 800 字符
-    this.setData({ debug: prev.slice(0, 800) });
-  }
-});
+module.exports = {
+  transcribe,
+  getBaiduAccessToken,
+  getRecorderManager
+};

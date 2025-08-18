@@ -38,7 +38,5 @@
       </view>
     </view>
   </view>
-  <view style="margin-top:12rpx;padding:16rpx;border:2rpx dashed #e5e7eb;border-radius:12rpx;color:#64748b;font-size:22rpx;white-space:pre-wrap;">
-    {{debug}}
-  </view>
+
   

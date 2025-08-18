@@ -18,7 +18,6 @@
             </view>
           </view>
           <view class="action-ops">
-            <button size="mini" bindtap="openEditAction" data-id="{{item.at}}">编辑</button>
             <button size="mini" class="danger" bindtap="deleteAction" data-id="{{item.at}}">删除</button>
           </view>
         </view>

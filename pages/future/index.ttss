@@ -1,7 +1,7 @@
-/* 未来页面样式 */
+/* 未来页面样式 - 马卡龙色系版 */
 .page {
   padding: 20rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #a0e7e5 0%, #b5f2ea 100%);
   min-height: 100vh;
 }
 
@@ -10,31 +10,31 @@
   top: 100rpx;
   right: 20rpx;
   background: rgba(255, 255, 255, 0.9);
-  color: #667eea;
+  color: #6ec6ca;
   padding: 12rpx 20rpx;
   border-radius: 20rpx;
   font-size: 24rpx;
   font-weight: 600;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
   z-index: 1001;
   backdrop-filter: blur(10rpx);
-  border: 1rpx solid rgba(102, 126, 234, 0.2);
+  border: 1rpx solid rgba(110, 198, 202, 0.2);
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10rpx);
   border-radius: 24rpx;
   padding: 32rpx;
   margin-bottom: 24rpx;
-  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
-  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.05);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-4rpx);
-  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12rpx 40rpx rgba(110, 198, 202, 0.15);
 }
 
 .card-title {
@@ -54,7 +54,7 @@
   transform: translateY(-50%);
   width: 6rpx;
   height: 32rpx;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #a0e7e5, #6ec6ca);
   border-radius: 3rpx;
 }
 
@@ -82,9 +82,9 @@
 .graph {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #a0e7e5 0%, #6ec6ca 100%);
   border-radius: 16rpx;
-  box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8rpx 32rpx rgba(110, 198, 202, 0.2);
 }
 
 .graph-overlay {
@@ -110,6 +110,7 @@
   font-size: 96rpx;
   display: block;
   margin-bottom: 24rpx;
+  color: #6ec6ca;
 }
 
 .overlay-text {
@@ -133,7 +134,7 @@
   gap: 48rpx;
   margin-top: 24rpx;
   padding: 24rpx;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 16rpx;
   backdrop-filter: blur(20rpx);
 }
@@ -146,7 +147,7 @@
   display: block;
   font-size: 40rpx;
   font-weight: 700;
-  color: #667eea;
+  color: #6ec6ca;
   margin-bottom: 8rpx;
 }
 
@@ -158,7 +159,7 @@
 
 .graph:active {
   transform: scale(0.98);
-  box-shadow: inset 0 6rpx 16rpx rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 6rpx 16rpx rgba(0, 0, 0, 0.05);
 }
 
 .hint {
@@ -167,9 +168,9 @@
   font-size: 26rpx;
   margin-top: 16rpx;
   padding: 12rpx;
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(160, 231, 229, 0.1);
   border-radius: 12rpx;
-  border: 1rpx dashed rgba(102, 126, 234, 0.2);
+  border: 1rpx dashed rgba(110, 198, 202, 0.3);
 }
 
 /* 人物信息样式 */
@@ -183,13 +184,13 @@
   width: 96rpx;
   height: 96rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #a0e7e5, #6ec6ca);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 48rpx;
   color: white;
-  box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4rpx 16rpx rgba(110, 198, 202, 0.2);
 }
 
 .person-details {
@@ -214,37 +215,37 @@
   padding: 32rpx;
   background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
   border-radius: 16rpx;
-  border-left: 8rpx solid #667eea;
+  border-left: 8rpx solid #a0e7e5;
   margin-top: 24rpx;
 }
 
 /* 按钮样式 */
 .primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, #a0e7e5 0%, #6ec6ca 100%) !important;
   color: white !important;
   border: none !important;
   border-radius: 20rpx !important;
   font-weight: 600 !important;
-  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3) !important;
+  box-shadow: 0 4rpx 12rpx rgba(110, 198, 202, 0.2) !important;
   transition: all 0.3s ease !important;
 }
 
 .primary:active {
   transform: translateY(2rpx) !important;
-  box-shadow: 0 2rpx 8rpx rgba(102, 126, 234, 0.4) !important;
+  box-shadow: 0 2rpx 8rpx rgba(110, 198, 202, 0.3) !important;
 }
 
 .secondary {
   background: white !important;
-  color: #667eea !important;
-  border: 2rpx solid #667eea !important;
+  color: #6ec6ca !important;
+  border: 2rpx solid #6ec6ca !important;
   border-radius: 20rpx !important;
   font-weight: 600 !important;
   transition: all 0.3s ease !important;
 }
 
 .secondary:active {
-  background: #667eea !important;
+  background: #6ec6ca !important;
   color: white !important;
   transform: translateY(2rpx) !important;
 }
@@ -260,8 +261,8 @@
   border-radius: 24rpx;
   padding: 32rpx;
   margin-bottom: 32rpx;
-  border-left: 8rpx solid #667eea;
-  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.08);
+  border-left: 8rpx solid #a0e7e5;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   position: relative;
   margin-left: 40rpx;
@@ -269,7 +270,7 @@
 
 .event-item:hover {
   transform: translateY(-4rpx);
-  box-shadow: 0 12rpx 40rpx rgba(102, 126, 234, 0.15);
+  box-shadow: 0 12rpx 40rpx rgba(110, 198, 202, 0.15);
 }
 
 .event-timeline-dot {
@@ -279,8 +280,8 @@
   width: 24rpx;
   height: 24rpx;
   border-radius: 50%;
-  background: #667eea;
-  box-shadow: 0 0 0 8rpx white, 0 0 0 12rpx #667eea;
+  background: #a0e7e5;
+  box-shadow: 0 0 0 8rpx white, 0 0 0 12rpx #a0e7e5;
 }
 
 .event-timeline-dot::before {
@@ -290,7 +291,7 @@
   top: 24rpx;
   width: 4rpx;
   height: 80rpx;
-  background: #e0e7ff;
+  background: #e0f7fa;
   z-index: -1;
 }
 
@@ -363,7 +364,7 @@
 
 .event-count {
   font-size: 28rpx;
-  color: #667eea;
+  color: #6ec6ca;
   font-weight: 600;
   margin-left: 8rpx;
 }
@@ -422,7 +423,7 @@
   max-width: 600rpx;
   max-height: 70vh;
   overflow: hidden;
-  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.2);
   animation: modalSlideIn 0.3s ease-out;
   margin-bottom: 120rpx;
 }
@@ -444,7 +445,7 @@
   align-items: center;
   padding: 32rpx;
   border-bottom: 2rpx solid #f0f0f0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #a0e7e5 0%, #6ec6ca 100%);
   color: white;
 }
 
@@ -505,9 +506,9 @@
 }
 
 .profile-textarea:focus {
-  border-color: #667eea;
+  border-color: #a0e7e5;
   background: white;
-  box-shadow: 0 0 0 6rpx rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 6rpx rgba(160, 231, 229, 0.1);
 }
 
 .profile-textarea[disabled] {
@@ -588,4 +589,21 @@
 
 .event-item:nth-child(4) {
   animation-delay: 0.3s;
+}
+
+/* 新增的马卡龙点缀色 */
+.pink-accent {
+  background: linear-gradient(135deg, #ffb6c1, #ff9a9e) !important;
+}
+
+.yellow-accent {
+  background: linear-gradient(135deg, #fffacd, #fff68f) !important;
+}
+
+.lavender-accent {
+  background: linear-gradient(135deg, #e6e6fa, #d8bfd8) !important;
+}
+
+.mint-accent {
+  background: linear-gradient(135deg, #98ff98, #7fffd4) !important;
 }
