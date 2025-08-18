@@ -15,18 +15,28 @@ Page({
   },
   
   loadData() {
-    // 从全局数据获取行为卡
+    // 从全局数据获取行为卡（来自镜子对话，默认已完成）
     const app = getApp();
     const actions = app.globalData.actions || [];
+    const globalActions = actions.map(action => ({
+      ...action,
+      completed: action.completed !== undefined ? action.completed : true,
+      source: 'chat' // 标记来源为对话
+    }));
     
-    // 从 inner_events_v1 获取行为卡
+    // 从 inner_events_v1 获取行为卡（手动添加，保持原状态）
     const stored = tt.getStorageSync('inner_events_v1') || {};
     const storedActions = stored.actions || [];
     const storedSkills = stored.skills || [];
+    const manualActions = storedActions.map(action => ({
+      ...action,
+      completed: action.completed !== undefined ? action.completed : false,
+      source: 'manual' // 标记来源为手动
+    }));
     
     // 合并两种来源的行为卡
-    const allActions = [...actions];
-    storedActions.forEach(action => {
+    const allActions = [...globalActions];
+    manualActions.forEach(action => {
       if (!allActions.find(a => a.at === action.at)) {
         allActions.push(action);
       }
@@ -97,10 +107,48 @@ Page({
     }
   },
   
-  // 打开添加习惯页面
+  // 新增事项
   openAddAction() {
-    tt.navigateTo({
-      url: '../rescue/index?mode=habit'
+    tt.showModal({
+      title: '新增事项',
+      editable: true,
+      placeholderText: '请输入事项内容',
+      success: (res) => {
+        if (res.confirm && res.content && res.content.trim()) {
+          this.addAction(res.content.trim());
+        }
+      }
+    });
+  },
+
+  // 添加新事项
+  addAction(text) {
+    const now = new Date();
+    const timeStr = now.getFullYear() + '-' + 
+                   String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                   String(now.getDate()).padStart(2, '0') + ' ' +
+                   String(now.getHours()).padStart(2, '0') + ':' + 
+                   String(now.getMinutes()).padStart(2, '0');
+    
+    const newAction = {
+      at: now.getTime().toString(),
+      text: text,
+      time: timeStr,
+      completed: false
+    };
+    
+    // 保存到 inner_events_v1
+    const stored = tt.getStorageSync('inner_events_v1') || {};
+    stored.actions = stored.actions || [];
+    stored.actions.push(newAction);
+    tt.setStorageSync('inner_events_v1', stored);
+    
+    // 刷新数据
+    this.loadData();
+    
+    tt.showToast({
+      title: '事项添加成功',
+      icon: 'success'
     });
   },
   
@@ -112,6 +160,32 @@ Page({
     });
   },
   
+  // 切换任务完成状态
+  toggleActionStatus(e) {
+    const id = e.currentTarget.dataset.id;
+    
+    // 从 inner_events_v1 更新状态
+    const stored = tt.getStorageSync('inner_events_v1') || {};
+    stored.actions = stored.actions || [];
+    
+    const actionIndex = stored.actions.findIndex(a => a.at === id);
+    if (actionIndex !== -1) {
+      stored.actions[actionIndex].completed = !stored.actions[actionIndex].completed;
+      tt.setStorageSync('inner_events_v1', stored);
+    }
+    
+    // 同时更新全局数据
+    const app = getApp();
+    const globalActionIndex = app.globalData.actions.findIndex(a => a.at === id);
+    if (globalActionIndex !== -1) {
+      app.globalData.actions[globalActionIndex].completed = !app.globalData.actions[globalActionIndex].completed;
+      app.persist();
+    }
+    
+    // 刷新数据
+    this.loadData();
+  },
+
   // 删除习惯
   deleteAction(e) {
     const id = e.currentTarget.dataset.id;

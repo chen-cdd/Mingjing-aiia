@@ -1,1 +1,51 @@
 /* e:\明镜\langlangshan\明镜明镜\pages\today\index.ttss */
+
+.action-main {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.action-status {
+  margin-right: 12px;
+  padding: 4px;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  transition: all 0.2s ease;
+}
+
+.checkbox.checked {
+  background-color: #007aff;
+  border-color: #007aff;
+}
+
+.checkmark {
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.action-content {
+  flex: 1;
+}
+
+.action-text.completed {
+  text-decoration: line-through;
+  color: #999;
+  opacity: 0.6;
+}
+
+.action-time {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+}

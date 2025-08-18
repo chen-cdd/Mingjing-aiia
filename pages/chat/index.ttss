@@ -28,10 +28,16 @@
 .handle{width:80rpx;height:10rpx;background:#e5e7eb;border-radius:9999rpx;margin:0 auto 12rpx}
 
 .sos-pane{margin:12rpx 0 14rpx}
-.sos-card{background:#fff;border:2rpx solid #e5e7eb;border-radius:16rpx;padding:16rpx}
-.sos-title{font-weight:800;margin-bottom:8rpx}
+.sos-card{background:#fff;border:2rpx solid #e5e7eb;border-radius:16rpx;padding:20rpx}
+.sos-title{font-weight:800;margin-bottom:16rpx;font-size:32rpx;color:#111827}
+.sos-description{margin-bottom:20rpx}
+.sos-description > view:first-child{color:#374151;font-size:28rpx;margin-bottom:12rpx;line-height:1.5}
+.sos-features{margin-top:8rpx}
+.sos-features > view{color:#6b7280;font-size:26rpx;margin-bottom:6rpx;line-height:1.4}
 .countdown{margin-top:12rpx;text-align:center;font-weight:800;font-size:32rpx}
-.btn-row{display:flex;gap:12rpx;justify-content:center;margin-top:12rpx}
+.btn-row{display:flex;gap:12rpx;justify-content:center;margin-top:20rpx;flex-wrap:wrap}
+.btn-row .btn-primary{flex:1;min-width:200rpx;text-align:center}
+.btn-row .btn-ghost{flex:0 0 auto;min-width:140rpx;text-align:center}
 
 /* 底部固定的进入按钮（Chat/SOS 都显示） */
 .enter-inner-fixed{

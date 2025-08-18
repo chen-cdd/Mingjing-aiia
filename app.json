@@ -10,7 +10,8 @@
     "pages/analysis/index",
     "pages/chat/index",
     "pages/rescue/index",
-    "pages/roleChat/index"
+    "pages/roleChat/index",
+    "pages/debug/index"
   ],
   "window": {
     "navigationBarTitleText": "明镜",

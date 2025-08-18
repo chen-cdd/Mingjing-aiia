@@ -1,6 +1,6 @@
-const DEEPSEEK_API_BASE = 'https://api.deepseek.com/v1';
-const DEEPSEEK_MODEL = 'deepseek-chat';
-const DEEPSEEK_API_KEY = 'sk-6ae09f0ac1ae4e76949ee5dcc4bac818'; // TODO: 仅用于内测，正式版请走服务端
+const ARK_API_BASE = 'https://ark.cn-beijing.volces.com/api/v3';
+const ARK_MODEL = 'doubao-seed-1-6-thinking-250715';
+const ARK_API_KEY = '8a6036e5-9997-4027-9aa3-12f0c69b3a23'; 
 
 /** 可取消：分析用户文本 */
 function analyzeCancelable(text){
@@ -9,7 +9,7 @@ function analyzeCancelable(text){
   const t0 = Date.now();
 
   const payload = {
-    model: DEEPSEEK_MODEL,
+    model: ARK_MODEL,
     temperature: 0.2,
     response_format: { type: 'json_object' },
     messages: buildAnalyzeMessages(text)
@@ -17,13 +17,13 @@ function analyzeCancelable(text){
 
   const promise = new Promise((resolve) => {
     task = tt.request({
-      url: `${DEEPSEEK_API_BASE}/chat/completions`,
+      url: `${ARK_API_BASE}/chat/completions`,
       method: 'POST',
       data: payload,
       timeout: 25000,
       header: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+        'Authorization': `Bearer ${ARK_API_KEY}`
       },
       success(res){
         if (settled) return; settled = true;
@@ -33,7 +33,7 @@ function analyzeCancelable(text){
           const json = safeParseJSON(content);
           const norm = normalizeAnalyze(json, text);
           const usage = res?.data?.usage || {};
-          norm.meta = metaFrom('deepseek', ms, res?.statusCode, usage);
+          norm.meta = metaFrom('ark', ms, res?.statusCode, usage);
           resolve(norm);
         }catch(e){
           const norm = fallbackAnalyze(text);
@@ -65,7 +65,7 @@ function buildAnalyzeMessages(text){
 任务：对用户叙述做客观信息抽取，仅输出 JSON，字段：
 - summary: string（<=120字）
 - topics: string[]（最多8个）
-- persons: string[]（最多8个）
+- persons: string[]（最多8个，不能抽取用户本身）
 - emotions: {name:string, score:number in [0,1]}[]（最多8个）
 - risk_score: number in [0,1]
 严禁额外文本。
@@ -117,7 +117,7 @@ function chatCancelable(history = [], tag = ''){
   const t0 = Date.now();
 
   const payload = {
-    model: DEEPSEEK_MODEL,
+    model: ARK_MODEL,
     temperature: 0.6,
     response_format: { type: 'json_object' },
     messages: buildChatMessages(history, tag)
@@ -125,13 +125,13 @@ function chatCancelable(history = [], tag = ''){
 
   const promise = new Promise((resolve) => {
     task = tt.request({
-      url: `${DEEPSEEK_API_BASE}/chat/completions`,
+      url: `${ARK_API_BASE}/chat/completions`,
       method: 'POST',
       data: payload,
       timeout: 25000,
       header: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+        'Authorization': `Bearer ${ARK_API_KEY}`
       },
       success(res){
         if (settled) return; settled = true;
@@ -141,7 +141,7 @@ function chatCancelable(history = [], tag = ''){
           const json = safeParseJSON(content);
           const norm = normalizeChat(json);
           const usage = res?.data?.usage || {};
-          norm.meta = metaFrom('deepseek', ms, res?.statusCode, usage);
+          norm.meta = metaFrom('ark', ms, res?.statusCode, usage);
           resolve(norm);
         }catch(e){
           const norm = fallbackChat();
@@ -233,7 +233,7 @@ function fallbackChat(){
 function metaFrom(from, ms, statusCode, usage, error){
   const m = {
     from, ms, status: statusCode || 0,
-    model: DEEPSEEK_MODEL,
+    model: ARK_MODEL,
     tokens: {
       prompt: usage?.prompt_tokens || 0,
       completion: usage?.completion_tokens || 0,

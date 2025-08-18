@@ -45,7 +45,12 @@ Page({
   },
 
   toChat(){ this.setData({ tab:'chat' }); },
-  toSOS(){ this.setData({ tab:'sos'  }); },
+  toSOS(){ 
+    // 直接跳转到rescue页面
+    tt.navigateTo({
+      url: '/pages/rescue/index'
+    });
+  },
 
   onInp(e){ this.setData({ inp: (e.detail && e.detail.value) || '' }); },
 
@@ -128,7 +133,15 @@ Page({
     // 若在弹层，则关闭；若在 SOS，则切回对话 Tab
     if (this.data.showSkill) this.setData({ showSkill:false });
     if (this.data.tab === 'sos') this.setData({ tab:'chat' });
-    // 不追加任何消息，不弹 Toast —— “就返回对话就好”
+    // 不追加任何消息，不弹 Toast —— "就返回对话就好"
+  },
+
+  // 跳转到rescue页面进行呼吸练习
+  goToRescue(){
+    this._stopTimer();
+    tt.navigateTo({
+      url: '/pages/rescue/index'
+    });
   },
 
   // 开始计时（data-duration 支持传秒数）

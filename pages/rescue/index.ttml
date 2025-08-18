@@ -1,14 +1,72 @@
 <view class="page">
-    <view class="section-title">4-7-8 呼吸</view>
-    <view class="breath" style="transform: scale({{scale}})" bindtap="toggle">{{running?'进行中':'开始'}}</view>
-    <view class="subtle" style="text-align:center;margin-bottom:16rpx;">{{cue}}</view>
-    <view style="display:flex;gap:24rpx;justify-content:center" class="subtle">
-      <view>前：<slider min="0" max="100" value="50"/></view>
-      <view>后：<slider min="0" max="100" value="40"/></view>
+    <!-- 标题和模式选择 -->
+    <view class="section-title">{{breathPattern[0]}}-{{breathPattern[1]}}-{{breathPattern[2]}} 呼吸练习</view>
+    
+    <!-- 呼吸模式选择 -->
+    <view class="breath-modes" wx:if="{{!running}}">
+      <view class="mode-btn {{breathPattern[0]==3?'active':''}}" bindtap="adjustBreathPattern" data-type="beginner">初级 3-3-3</view>
+      <view class="mode-btn {{breathPattern[0]==4?'active':''}}" bindtap="adjustBreathPattern" data-type="standard">标准 4-7-8</view>
+      <view class="mode-btn {{breathPattern[0]==6?'active':''}}" bindtap="adjustBreathPattern" data-type="advanced">进阶 6-6-6</view>
     </view>
+    
+    <!-- 主要呼吸区域 -->
+    <view class="breath-container">
+      <!-- 进度环 -->
+      <view class="progress-ring" wx:if="{{running}}">
+        <view class="progress-fill" style="stroke-dasharray: {{progress * 2.51}} 251"></view>
+      </view>
+      
+      <!-- 呼吸按钮 -->
+      <view class="breath {{currentPhase}}" style="transform: scale({{scale}})" bindtap="toggle">
+        <view class="breath-text">{{running ? currentPhase : '开始'}}</view>
+        <view class="cycle-count" wx:if="{{running && cycleCount > 0}}">第{{cycleCount}}轮</view>
+      </view>
+    </view>
+    
+    <!-- 状态提示 -->
+    <view class="status-area">
+      <view class="cue-text">{{cue}}</view>
+      <view class="progress-text" wx:if="{{running}}">进度: {{Math.floor(progress)}}%</view>
+    </view>
+    
+    <!-- 心情评分 -->
+    <view class="mood-section">
+      <view class="mood-title">心情评分</view>
+      <view class="mood-row">
+        <view class="mood-item">
+          <text class="mood-label">练习前</text>
+          <slider 
+            class="mood-slider" 
+            min="0" 
+            max="100" 
+            value="{{beforeMood}}"
+            bindchange="onBeforeMoodChange"
+            activeColor="#3b82f6"
+            backgroundColor="#e5e7eb"
+            block-size="28"
+            disabled="{{running}}"/>
+          <text class="mood-value">{{beforeMood}}</text>
+        </view>
+        <view class="mood-item">
+          <text class="mood-label">练习后</text>
+          <slider 
+            class="mood-slider" 
+            min="0" 
+            max="100" 
+            value="{{afterMood}}"
+            bindchange="onAfterMoodChange"
+            activeColor="#10b981"
+            backgroundColor="#e5e7eb"
+            block-size="28"/>
+          <text class="mood-value">{{afterMood}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 操作按钮 -->
     <view class="btn-row">
       <view class="btn-ghost" bindtap="back">返回对话</view>
-      <view class="btn-primary" bindtap="save">归档</view>
+      <view class="btn-primary" bindtap="save">归档练习</view>
     </view>
   </view>
   

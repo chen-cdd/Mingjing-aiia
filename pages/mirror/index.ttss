@@ -26,6 +26,97 @@
   .hint-text{font-size:26rpx}
   .hint-arrow{font-size:30rpx;margin-top:6rpx;animation:floatY 1.6s ease-in-out infinite}
   @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(6rpx)}}
+
+  /* 动态文字展示 */
+  .dynamic-text-container {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     z-index: 10;
+     width: 80%;
+     text-align: center;
+     pointer-events: none;
+     height: 330rpx; /* 显示5行文字的高度 */
+     overflow: hidden;
+     mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 10%, rgba(0,0,0,0.8) 25%, #000 35%, #000 65%, rgba(0,0,0,0.8) 75%, rgba(0,0,0,0.3) 90%, transparent 100%);
+     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 10%, rgba(0,0,0,0.8) 25%, #000 35%, #000 65%, rgba(0,0,0,0.8) 75%, rgba(0,0,0,0.3) 90%, transparent 100%);
+   }
+  
+  .text-scroll-wrapper {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+     padding: 0 20rpx;
+   }
+   
+  .text-line {
+     height: 66rpx;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     margin: 0;
+     flex-shrink: 0;
+     width: 100%;
+     font-size: 24rpx;
+     color: rgba(59, 130, 246, 0.4);
+     font-weight: 300;
+     opacity: 0.6;
+     transform: scale(0.85);
+     transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+     position: relative;
+  }
+  
+  /* 文字大小和透明度渐变 */
+   .text-line:nth-child(1) {
+      font-size: 20rpx;
+      opacity: 0.2;
+      transform: scale(0.7) translateY(-5rpx);
+      filter: blur(1rpx);
+   }
+   
+   .text-line:nth-child(2) {
+      font-size: 24rpx;
+      opacity: 0.5;
+      transform: scale(0.85) translateY(-2rpx);
+      filter: blur(0.5rpx);
+   }
+  
+  /* 当前激活的文字样式 - 中间位置 */
+  .text-line.active {
+     font-size: 38rpx;
+     color: #4A90E2;
+     font-weight: 600;
+     text-shadow: 0 0 10rpx rgba(74, 144, 226, 0.3);
+     opacity: 1;
+     transform: scale(1.05);
+     letter-spacing: 2rpx;
+  }
+  
+  .text-line:nth-child(4) {
+      font-size: 24rpx;
+      opacity: 0.5;
+      transform: scale(0.85) translateY(2rpx);
+      filter: blur(0.5rpx);
+   }
+   
+   .text-line:nth-child(5) {
+      font-size: 20rpx;
+      opacity: 0.2;
+      transform: scale(0.7) translateY(5rpx);
+      filter: blur(1rpx);
+   }
+  
+  /* 定义文字轮播动画 */
+  @keyframes textScrollUp {
+     0% {
+        transform: translateY(0);
+     }
+     100% {
+        transform: translateY(-66rpx);
+     }
+  }
   
   /* 水波 */
   .ripple-layer{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none}

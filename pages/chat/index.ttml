@@ -19,19 +19,19 @@
   <!-- SOS 区（简易引导） -->
   <view class="sos-pane" tt:if="{{tab==='sos'}}">
     <view class="sos-card">
-      <view class="sos-title">2 分钟呼吸练习</view>
-      <view class="sos-steps">
-        <view>• 吸气 4 拍</view>
-        <view>• 停留 4 拍</view>
-        <view>• 呼气 4 拍</view>
-        <view>• 停留 4 拍，循环 8 次</view>
+      <view class="sos-title">呼吸练习</view>
+      <view class="sos-description">
+        <view>使用专业的4-7-8呼吸法帮助你快速平静心情</view>
+        <view class="sos-features">
+          <view>• 可视化引导和进度显示</view>
+          <view>• 多种呼吸模式选择</view>
+          <view>• 心情评分和改善追踪</view>
+          <view>• 个性化练习体验</view>
+        </view>
       </view>
       <view class="btn-row">
-        <view class="btn-ghost" bindtap="returnToChat">返回对话</view>
-        <view class="btn-ghost" bindtap="skipSOS">跳过并返回镜子</view>
-        <view class="btn-primary" data-duration="120" bindtap="startTimer">开始 2:00</view>
+        <view class="btn-primary" bindtap="goToRescue">开始呼吸练习</view>
       </view>
-      <view class="countdown" tt:if="{{secondsLeft>0 || countdownText}}">{{countdownText}}</view>
     </view>
   </view>
 

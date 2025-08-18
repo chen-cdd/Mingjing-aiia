@@ -91,6 +91,7 @@ Page({
       // 更新记录的分析结果
       timeline[index].summary = result.summary || '';
       timeline[index].topics = result.topics || [];
+      timeline[index].persons = result.persons || [];  // 确保保存persons字段
       timeline[index].emotions = result.emotions || [];
       
       // 更新存储

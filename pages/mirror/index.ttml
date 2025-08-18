@@ -1,4 +1,4 @@
-<view class="mirror-page" catchtouchmove="true">
+<view class="mirror-page">
   <!-- S0 初始镜面 -->
   <view id="mirrorSurface"
         class="mirror-surface"
@@ -11,7 +11,15 @@
     </view>
     <view class="mirror-hint">
       <text class="hint-text">轻触镜面</text>
-      <view class="hint-arrow">↓</view>
+    </view>
+
+    <!-- 动态文字轮播展示 -->
+    <view class="dynamic-text-container">
+      <view class="text-scroll-wrapper" style="{{scrollStyle}}">
+        <block tt:for="{{displayTexts}}" tt:key="index">
+          <view class="text-line {{item.active ? 'active' : ''}}">{{item.text}}</view>
+        </block>
+      </view>
     </view>
 
     <!-- 水波 -->
@@ -29,7 +37,7 @@
   </view>
 
   <!-- S2 镜中弹出菜单 -->
-  <view class="menu-in-mirror" tt:if="{{currentState==='menu'}}" catchtouchmove="true">
+  <view class="menu-in-mirror" tt:if="{{currentState==='menu'}}">
     <view class="menu-backdrop"></view>
     <view class="menu-content {{menuAnimated ? 'modal-in' : ''}}">
       <view class="menu-header">

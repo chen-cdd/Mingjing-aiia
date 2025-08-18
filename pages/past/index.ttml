@@ -5,7 +5,7 @@
       <text class="cloud-tip">点击情绪词查看详情</text>
     </view>
     <view class="cloud-container">
-      <canvas class="cloud" canvas-id="cloud" id="cloud" bindtap="onCloudTap" wx:if="{{cloud.length > 0}}"></canvas>
+      <canvas class="cloud" canvas-id="cloud" id="cloud" type="2d" bindtap="onCloudTap" wx:if="{{cloud.length > 0}}"></canvas>
       <view class="cloud-empty" wx:else>
         <view class="empty-icon">🌙</view>
         <text class="empty-text">暂无情绪数据</text>

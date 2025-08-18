@@ -1,14 +1,21 @@
 <view class="page">
     <view class="card">
       <view class="card-title-row">
-        <view class="card-title">我的习惯</view>
-        <button size="mini" class="primary" bindtap="openAddAction">新增习惯</button>
+        <view class="card-title">今日事项</view>
+        <button size="mini" class="primary" bindtap="openAddAction">新增事项</button>
       </view>
       <view class="action-list">
         <view class="action-item" wx:for="{{actions}}" wx:key="at">
           <view class="action-main">
-            <view class="action-text">{{item.text}}</view>
-            <view class="action-time">{{item.time}}</view>
+            <view class="action-status" bindtap="toggleActionStatus" data-id="{{item.at}}">
+              <view class="checkbox {{item.completed ? 'checked' : ''}}">
+                <text class="checkmark">{{item.completed ? '✓' : ''}}</text>
+              </view>
+            </view>
+            <view class="action-content">
+              <view class="action-text {{item.completed ? 'completed' : ''}}">{{item.text}}</view>
+              <view class="action-time">{{item.time}}</view>
+            </view>
           </view>
           <view class="action-ops">
             <button size="mini" bindtap="openEditAction" data-id="{{item.at}}">编辑</button>
@@ -28,4 +35,3 @@
       </view>
     </view>
   </view>
-  

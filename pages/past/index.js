@@ -116,28 +116,139 @@ Page({
   
   // 初始化情绪云图
   initEmotionCloud() {
-    const ctx = tt.createCanvasContext('cloud');
-    this.ctx = ctx;
-    this.emotionPositions = []; // 存储情绪词位置信息
-    this.updateEmotionCloud();
+    console.log('开始初始化情绪云图');
+    
+    // 检查系统信息和基础库版本
+    const systemInfo = tt.getSystemInfoSync();
+    console.log('系统信息:', systemInfo);
+    
+    const query = tt.createSelectorQuery().in(this);
+    query.select('#cloud')
+      .fields({ node: true, size: true })
+      .exec((res) => {
+        console.log('Canvas查询结果:', res);
+        
+        if (res && res[0]) {
+          if (res[0].node) {
+            // 使用新版Canvas 2D API
+            try {
+              const canvas = res[0].node;
+              console.log('Canvas节点:', canvas);
+              
+              // 检查Canvas节点是否有效
+              if (!canvas || typeof canvas.getContext !== 'function') {
+                console.error('Canvas节点无效或不支持getContext方法');
+                this.fallbackToOldCanvas();
+                return;
+              }
+              
+              const ctx = canvas.getContext('2d');
+              if (!ctx) {
+                console.error('无法获取2D上下文，降级到旧版API');
+                this.fallbackToOldCanvas();
+                return;
+              }
+              
+              const dpr = systemInfo.pixelRatio || 1;
+              const width = res[0].width || 300;
+              const height = res[0].height || 300;
+              
+              canvas.width = width * dpr;
+              canvas.height = height * dpr;
+              ctx.scale(dpr, dpr);
+              
+              this.ctx = ctx;
+              this.canvas = canvas;
+              this.isNewCanvas = true;
+              this.emotionPositions = [];
+              
+              console.log('新版Canvas初始化成功');
+              this.updateEmotionCloud();
+              
+            } catch (error) {
+              console.error('新版Canvas初始化失败:', error);
+              this.fallbackToOldCanvas();
+            }
+          } else {
+            // 没有node属性，使用旧版API
+            console.log('Canvas节点不存在，使用旧版API');
+            this.fallbackToOldCanvas();
+          }
+        } else {
+          console.error('Canvas查询失败，无法初始化情绪云图');
+          this.showCanvasError();
+        }
+      });
+  },
+  
+  // 降级到旧版Canvas API
+  fallbackToOldCanvas() {
+    try {
+      console.log('降级到旧版Canvas API');
+      const ctx = tt.createCanvasContext('cloud', this);
+      if (ctx) {
+        this.ctx = ctx;
+        this.isNewCanvas = false;
+        this.emotionPositions = [];
+        console.log('旧版Canvas初始化成功');
+        this.updateEmotionCloud();
+      } else {
+        console.error('旧版Canvas初始化也失败');
+        this.showCanvasError();
+      }
+    } catch (error) {
+      console.error('旧版Canvas初始化失败:', error);
+      this.showCanvasError();
+    }
+  },
+  
+  // 显示Canvas错误信息
+  showCanvasError() {
+    console.error('Canvas完全无法初始化，显示错误提示');
+    tt.showToast({
+      title: 'Canvas初始化失败，请重试',
+      icon: 'none',
+      duration: 2000
+    });
   },
   
   // 更新情绪云图
   updateEmotionCloud() {
-    if (!this.ctx || !this.data.cloud || this.data.cloud.length === 0) return;
+    if (!this.ctx || !this.data.cloud || this.data.cloud.length === 0) {
+      console.log('无法更新情绪云图: ctx不存在或数据为空');
+      return;
+    }
+    
+    console.log('开始更新情绪云图, 数据:', this.data.cloud);
     
     const ctx = this.ctx;
     const canvasWidth = 300;
     const canvasHeight = 300;
     
     // 清空画布
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    if (this.isNewCanvas) {
+      // 新版Canvas API
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    } else {
+      // 旧版Canvas API
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    }
     
-    // 绘制背景渐变
-    const gradient = ctx.createRadialGradient(canvasWidth/2, canvasHeight/2, 0, canvasWidth/2, canvasHeight/2, canvasWidth/2);
-    gradient.addColorStop(0, 'rgba(74, 144, 226, 0.05)');
-    gradient.addColorStop(1, 'rgba(74, 144, 226, 0.02)');
-    ctx.fillStyle = gradient;
+    // 绘制背景渐变（兼容性处理）
+    try {
+      if (ctx.createRadialGradient) {
+        const gradient = ctx.createRadialGradient(canvasWidth/2, canvasHeight/2, 0, canvasWidth/2, canvasHeight/2, canvasWidth/2);
+        gradient.addColorStop(0, 'rgba(74, 144, 226, 0.05)');
+        gradient.addColorStop(1, 'rgba(74, 144, 226, 0.02)');
+        ctx.fillStyle = gradient;
+      } else {
+        // 降级方案：使用纯色背景
+        ctx.fillStyle = 'rgba(74, 144, 226, 0.03)';
+      }
+    } catch (error) {
+      console.warn('Canvas渐变不支持，使用纯色背景:', error);
+      ctx.fillStyle = 'rgba(74, 144, 226, 0.03)';
+    }
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
     // 绘制情绪云图
@@ -157,78 +268,45 @@ Page({
     
     // 按分数排序，分数高的放在中心
     const sortedEmotions = emotions.sort((a, b) => b.score - a.score);
-    this.emotionPositions = [];
+    
+    // 绘制情绪词
+    this.emotionPositions = []; // 重置位置信息
     
     sortedEmotions.forEach((emotion, index) => {
-      const fontSize = Math.max(16, Math.min(36, emotion.score / 1.5));
-      const textWidth = ctx.measureText ? fontSize * emotion.name.length * 0.6 : fontSize * emotion.name.length * 0.6;
+      const fontSize = Math.max(12, Math.min(32, 12 + emotion.score * 0.3));
+      const color = colors[emotion.name] || '#666';
       
-      let x, y, attempts = 0;
-      let validPosition = false;
+      // 计算位置（简单的圆形分布）
+      const angle = (index / sortedEmotions.length) * 2 * Math.PI;
+      const radius = 60 + (sortedEmotions.length - index - 1) * 20;
+      const x = canvasWidth / 2 + Math.cos(angle) * radius;
+      const y = canvasHeight / 2 + Math.sin(angle) * radius;
       
-      // 使用螺旋布局算法避免重叠
-      while (!validPosition && attempts < 50) {
-        const angle = attempts * 0.5;
-        const radius = Math.min(attempts * 8, Math.min(canvasWidth, canvasHeight) / 3);
-        x = canvasWidth / 2 + radius * Math.cos(angle) - textWidth / 2;
-        y = canvasHeight / 2 + radius * Math.sin(angle);
-        
-        // 确保在画布范围内
-        x = Math.max(10, Math.min(x, canvasWidth - textWidth - 10));
-        y = Math.max(fontSize + 10, Math.min(y, canvasHeight - 10));
-        
-        // 检查是否与已有文字重叠
-        validPosition = true;
-        for (let pos of this.emotionPositions) {
-          const dx = Math.abs(x - pos.x);
-          const dy = Math.abs(y - pos.y);
-          if (dx < textWidth + pos.width + 10 && dy < fontSize + pos.height + 5) {
-            validPosition = false;
-            break;
-          }
-        }
-        attempts++;
-      }
+      // 绘制文字
+      ctx.font = `${fontSize}px PingFang SC, sans-serif`;
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(emotion.name, x, y);
       
       // 存储位置信息用于点击检测
       this.emotionPositions.push({
-        x: x,
-        y: y,
-        width: textWidth,
+        name: emotion.name,
+        x: x - fontSize * emotion.name.length / 4,
+        y: y - fontSize / 2,
+        width: fontSize * emotion.name.length / 2,
         height: fontSize,
         emotion: emotion
       });
-      
-      // 绘制阴影效果
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-      ctx.shadowBlur = 3;
-      ctx.shadowOffsetX = 1;
-      ctx.shadowOffsetY = 1;
-      
-      // 设置字体和颜色
-      ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`;
-      const color = colors[emotion.name] || '#4a90e2';
-      const alpha = Math.max(0.6, emotion.score / 100);
-      ctx.fillStyle = color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
-      
-      // 绘制文字
-      ctx.fillText(emotion.name, x, y);
-      
-      // 重置阴影
-      ctx.shadowColor = 'transparent';
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 0;
-      
-      // 绘制情绪强度指示器（小圆点）
-      const dotRadius = Math.max(2, emotion.score / 20);
-      ctx.beginPath();
-      ctx.arc(x + textWidth + 8, y - fontSize/2, dotRadius, 0, 2 * Math.PI);
-      ctx.fillStyle = color;
-      ctx.fill();
     });
     
-    ctx.draw();
+    // 如果是旧版Canvas，需要调用draw()方法
+    if (!this.isNewCanvas && ctx.draw) {
+      ctx.draw();
+      console.log('旧版Canvas绘制完成');
+    } else {
+      console.log('新版Canvas绘制完成');
+    }
   },
   
   // 处理云图点击事件
@@ -236,26 +314,32 @@ Page({
     if (!this.emotionPositions || this.emotionPositions.length === 0) return;
     
     const { x, y } = e.detail;
-    const canvasRect = e.currentTarget.getBoundingClientRect();
-    const scaleX = 300 / canvasRect.width;
-    const scaleY = 300 / canvasRect.height;
     
-    const canvasX = (x - canvasRect.left) * scaleX;
-    const canvasY = (y - canvasRect.top) * scaleY;
-    
-    // 检查点击的是哪个情绪词
-    for (let pos of this.emotionPositions) {
-      if (canvasX >= pos.x && canvasX <= pos.x + pos.width &&
-          canvasY >= pos.y - pos.height && canvasY <= pos.y) {
-        // 显示情绪详情
-        tt.showModal({
-          title: pos.emotion.name,
-          content: `情绪强度: ${pos.emotion.score}%\n出现频率: ${pos.emotion.pct}%`,
-          showCancel: false
-        });
-        break;
+    // 使用小程序API获取canvas元素信息
+    const query = tt.createSelectorQuery();
+    query.select('#cloud').boundingClientRect((rect) => {
+      if (!rect) return;
+      
+      const scaleX = 300 / rect.width;
+      const scaleY = 300 / rect.height;
+      
+      const canvasX = (x - rect.left) * scaleX;
+      const canvasY = (y - rect.top) * scaleY;
+      
+      // 检查点击的是哪个情绪词
+      for (let pos of this.emotionPositions) {
+        if (canvasX >= pos.x && canvasX <= pos.x + pos.width &&
+            canvasY >= pos.y - pos.height && canvasY <= pos.y) {
+          // 显示情绪详情
+          tt.showModal({
+            title: pos.emotion.name,
+            content: `情绪强度: ${pos.emotion.score}%\n出现频率: ${pos.emotion.pct}%`,
+            showCancel: false
+          });
+          break;
+        }
       }
-    }
+    }).exec();
   },
   
   // 点击时间线项目，跳转到详情页

@@ -1,0 +1,186 @@
+/* 呼吸模式选择 */
+.breath-modes {
+  display: flex;
+  gap: 12rpx;
+  margin: 24rpx 0;
+  justify-content: center;
+}
+
+.mode-btn {
+  padding: 16rpx 24rpx;
+  border-radius: 20rpx;
+  background: #f8fafc;
+  border: 2rpx solid #e2e8f0;
+  font-size: 24rpx;
+  color: #64748b;
+  transition: all 0.3s;
+}
+
+.mode-btn.active {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+/* 呼吸容器 */
+.breath-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 48rpx 0;
+}
+
+/* 进度环 */
+.progress-ring {
+  position: absolute;
+  width: 360rpx;
+  height: 360rpx;
+  border-radius: 50%;
+  border: 8rpx solid #e5e7eb;
+  overflow: hidden;
+}
+
+.progress-fill {
+  position: absolute;
+  top: -8rpx;
+  left: -8rpx;
+  width: 360rpx;
+  height: 360rpx;
+  border-radius: 50%;
+  border: 8rpx solid #3b82f6;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  transform: rotate(-90deg);
+  transition: transform 0.3s ease;
+}
+
+/* 改进的呼吸按钮 */
+.breath {
+  width: 320rpx;
+  height: 320rpx;
+  border-radius: 999rpx;
+  background: radial-gradient(circle at 50% 40%, #dbeafe, #fff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border: 4rpx solid #bfdbfe;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.breath.吸气 {
+  background: radial-gradient(circle at 50% 40%, #dcfce7, #f0fdf4);
+  border-color: #86efac;
+  box-shadow: 0 0 40rpx rgba(34, 197, 94, 0.3);
+}
+
+.breath.屏息 {
+  background: radial-gradient(circle at 50% 40%, #fef3c7, #fffbeb);
+  border-color: #fbbf24;
+  box-shadow: 0 0 40rpx rgba(245, 158, 11, 0.3);
+}
+
+.breath.呼气 {
+  background: radial-gradient(circle at 50% 40%, #e0e7ff, #f1f5f9);
+  border-color: #a5b4fc;
+  box-shadow: 0 0 40rpx rgba(99, 102, 241, 0.3);
+}
+
+.breath-text {
+  font-size: 32rpx;
+  margin-bottom: 8rpx;
+}
+
+.cycle-count {
+  font-size: 24rpx;
+  color: #64748b;
+  font-weight: 400;
+}
+
+/* 状态区域 */
+.status-area {
+  text-align: center;
+  margin: 32rpx 0;
+}
+
+.cue-text {
+  font-size: 28rpx;
+  color: #374151;
+  margin-bottom: 12rpx;
+  font-weight: 500;
+}
+
+.progress-text {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+/* 心情评分区域 */
+.mood-section {
+  background: #f8fafc;
+  border-radius: 24rpx;
+  padding: 32rpx 24rpx;
+  margin: 32rpx 0;
+  border: 2rpx solid #e2e8f0;
+}
+
+.mood-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #374151;
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.mood-row {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.mood-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.mood-label {
+  font-size: 26rpx;
+  color: #4b5563;
+  width: 120rpx;
+  flex-shrink: 0;
+}
+
+.mood-slider {
+  flex: 1;
+  margin: 0 16rpx;
+}
+
+.mood-value {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #374151;
+  width: 60rpx;
+  text-align: center;
+}
+
+/* 响应式优化 */
+@media (max-width: 750rpx) {
+  .breath-modes {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mode-btn {
+    width: 200rpx;
+    text-align: center;
+  }
+  
+  .mood-row {
+    gap: 32rpx;
+  }
+}

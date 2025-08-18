@@ -1,0 +1,50 @@
+<view class="debug-page">
+  <view class="header">
+    <button class="back-btn" bindtap="back">← 返回</button>
+    <text class="title">数据调试页面</text>
+  </view>
+
+  <view class="section">
+    <view class="section-title">缓存数据概览</view>
+    <view class="info-card">
+      <text class="info-item">时间线事件数量: {{timeline.length}}</text>
+      <text class="info-item">缓存数据存在: {{cacheData ? '是' : '否'}}</text>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">操作按钮</view>
+    <view class="button-group">
+      <button class="action-btn primary" bindtap="addTestData">添加测试数据</button>
+      <button class="action-btn danger" bindtap="clearCache">清空缓存</button>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">事件人物分析</view>
+    <view class="events-list">
+      <view class="event-item" tt:for="{{personsExtracted}}" tt:key="index">
+        <view class="event-header">
+          <text class="event-id">事件 {{item.index}}</text>
+          <text class="event-status">{{item.hasPersonsField ? '有persons字段' : '无persons字段'}}</text>
+        </view>
+        <view class="event-text">{{item.text}}</view>
+        <view class="persons-info">
+          <view class="persons-row">
+            <text class="label">Analysis提取:</text>
+            <text class="persons">{{item.personsFromAnalysis.length > 0 ? item.personsFromAnalysis.join(', ') : '无'}}</text>
+          </view>
+          <view class="persons-row">
+            <text class="label">文本提取:</text>
+            <text class="persons">{{item.personsFromText.length > 0 ? item.personsFromText.join(', ') : '无'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <view class="empty" tt:if="{{personsExtracted.length === 0}}">
+      <text class="empty-text">暂无事件数据</text>
+      <text class="empty-desc">点击"添加测试数据"来创建一些示例数据</text>
+    </view>
+  </view>
+</view>

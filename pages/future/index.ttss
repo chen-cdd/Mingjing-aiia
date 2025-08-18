@@ -5,6 +5,22 @@
   min-height: 100vh;
 }
 
+.debug-btn {
+  position: fixed;
+  top: 100rpx;
+  right: 20rpx;
+  background: rgba(255, 255, 255, 0.9);
+  color: #667eea;
+  padding: 12rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  backdrop-filter: blur(10rpx);
+  border: 1rpx solid rgba(102, 126, 234, 0.2);
+}
+
 .card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10rpx);
@@ -404,10 +420,11 @@
   border-radius: 24rpx;
   width: 90%;
   max-width: 600rpx;
-  max-height: 80vh;
+  max-height: 70vh;
   overflow: hidden;
   box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.3);
   animation: modalSlideIn 0.3s ease-out;
+  margin-bottom: 120rpx;
 }
 
 @keyframes modalSlideIn {
@@ -457,7 +474,7 @@
 
 .modal-body {
   padding: 32rpx;
-  max-height: 60vh;
+  max-height: 40vh;
   overflow-y: auto;
 }
 

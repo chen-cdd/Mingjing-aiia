@@ -1,9 +1,12 @@
 <view class="page">
+    <!-- 调试按钮 -->
+    <view class="debug-btn" bindtap="goToDebug">🔧 调试</view>
+    
     <!-- 关系图卡片 -->
     <view class="card">
       <view class="card-title">🌐 人物关系图</view>
       <view class="graph-container">
-        <canvas class="graph" canvas-id="graph" id="graph" bindtap="tapGraph"></canvas>
+        <ec-canvas id="my-chart-dom-graph" canvas-id="my-chart-dom-graph" ec="{{ ec }}" class="graph"></ec-canvas>
         <view class="graph-overlay" tt:if="{{persons.length === 0}}">
           <view class="overlay-content">
             <text class="overlay-icon">👥</text>
@@ -64,7 +67,7 @@
           <view class="event-timeline-dot"></view>
           <view class="event-main">
             <view class="event-header">
-              <view class="event-time">{{item.time}}</view>
+              <view class="event-time">{{item.createTime}}</view>
               <view class="event-status">{{item.status || '已完成'}}</view>
             </view>
             <view class="event-summary">{{item.summary}}</view>
